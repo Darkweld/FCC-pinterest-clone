@@ -1,0 +1,53 @@
+<html>
+  <head>
+    
+    <link href = "public/css/css.css" type = "text/css" rel = "stylesheet">
+    
+    
+  </head>
+  
+  <body>
+    <div class =  "link-container">
+    <% if (user) { %>
+      <a href = "/profile">Profile</a>
+      <a href = "/logout">Logout</a>
+    <% } else { %>
+      <a href = "/login">Login</a>
+    <% } %>
+    </div>
+
+    <div class = 'uploadPageContainer'>
+    <form id = "uploadForm" class = "uploadForm" enctype = 'multipart/form-data' action = "">
+
+      <p class = "instruction">To upload a file from your computer locally, use this:</p>
+      <input type = 'file' name = "uploadLocal" class = 'uploadFormInput'>
+      <p class = 'instruction'>To upload a file using a image url from the internet, use this:</p>
+      <input type = 'text' name = "uploadHotlink" class = 'uploadFormInput'>
+      <p class = 'instruction'>Title of upload</p>
+      <input type="text" name="title" required placeholder="Title">
+      <input type = 'submit' value = 'Upload'>
+
+    </form>
+    </div>
+    
+    <script type = 'text/javascript' src = '/ajax/requests.js'></script>
+    <script type = 'text/javascript' src = '/controllers/uploadController.js'></script>
+    
+    
+  </body>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</html>
