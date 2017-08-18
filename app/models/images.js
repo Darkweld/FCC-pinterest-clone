@@ -3,13 +3,14 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Books = new Schema({
+var Images = new Schema({
     imageTitle: String,
-    imageUrl: String,
-    convertedImageUrl: String,
+    localImagePath: String,
+    shares: Number,
+    resharedFrom: {type: Schema.Types.ObjectId, ref: 'Images'},
     likes: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    user : {type: Schema.Types.ObjectId, ref: 'User'}
+    creator : {type: Schema.Types.ObjectId, ref: 'User'}
 });
 
 
-module.exports = mongoose.model('Books', Books);
+module.exports = mongoose.model('Images', Images);

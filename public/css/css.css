@@ -140,3 +140,20 @@ body {
     font-weight: 700;
     font-size:20px;
 }
+
+
+.preview {
+    width: 200px;
+    height: 200px;
+}
+.uploadPageContainer {
+    width: 80%;
+    margin: 5% auto 5% auto;
+    text-align: center;
+}
+.dividerContainerUpload {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    flex-flow: row;
+}

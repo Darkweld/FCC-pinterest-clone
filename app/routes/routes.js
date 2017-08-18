@@ -3,7 +3,7 @@
 var path = process.cwd();
 var Server = require(path + "/app/controllers/serverController.js");
 var multer = require('multer');
-var upload = multer({dest: './public/images/uploads'})
+var upload = multer({dest: './public/images/uploads', limits: {fieldSize: 500, fileSize: 5242880, files: 1, parts: 2, headerPairs: 1}})
 module.exports = function(app, passport) {
     
     
@@ -76,7 +76,13 @@ module.exports = function(app, passport) {
 
     app.route('/upload')
     	.get(server.uploadPage)
-    	.post(upload.any(), server.uploadImage);
+    	.post(upload.none(), server.convertImage);
+    
+    app.route('/uploadLocal')
+    	.post(upload.single('uploadLocal'), server.uploadImage);
+
+    app.route('/uploadHotlink')
+    	.post(upload.single('uploadHotlink'), server.uploadHotlink);
 
 
 };

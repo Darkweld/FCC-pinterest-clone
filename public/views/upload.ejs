@@ -16,15 +16,24 @@
     <% } %>
     </div>
 
-    <div class = 'uploadPageContainer'>
+    <div class = 'uploadPageContainer' id = 'uploadPageContainer'>
     <form id = "uploadForm" class = "uploadForm" enctype = 'multipart/form-data' action = "">
+    <p class = 'boldText'>You may choose to upload locally or with an image url, but not both.</p>
+    <p class = 'boldText'>Valid image types: .png, .jpg, .gif</p>
 
+      <div class = "dividerContainerUpload" id = "dividerContainerUpload">
+       <div class = "divider">
       <p class = "instruction">To upload a file from your computer locally, use this:</p>
-      <input type = 'file' name = "uploadLocal" class = 'uploadFormInput'>
+      <input type = 'file' name = "uploadLocal" class = 'uploadFormInput' id = 'uploadLocal'>
+       </div>
+       <div class = "divider">
       <p class = 'instruction'>To upload a file using a image url from the internet, use this:</p>
-      <input type = 'text' name = "uploadHotlink" class = 'uploadFormInput'>
+      <input type = 'text' name = "uploadHotlink" class = 'uploadFormInput' id = 'uploadHotlink'>
+        </div>
+      </div>
       <p class = 'instruction'>Title of upload</p>
       <input type="text" name="title" required placeholder="Title">
+      
       <input type = 'submit' value = 'Upload'>
 
     </form>

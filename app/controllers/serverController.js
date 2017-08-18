@@ -2,7 +2,8 @@
 
 var User = require('../models/user');
 var Images = require('../models/images');
-var https = require('https');
+var request = require('request');
+var FormData = require('form-data');
 
 function server (passport) {
 	this
@@ -100,10 +101,68 @@ function server (passport) {
 	}
 
 	this.uploadImage = function(req, res){
-		console.log(req.user);
 		console.log(req.file);
 		console.log(req.body);
+		res.json({'query': 'completed'});
+	
+	};
+	this.convertImage = function(req, res){
 
+		if (req.user.images.length > 10) return res.json('error': 'You have too many images.');
+
+		if (req.body.title.length > 20 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return res.json({error: 'Invalid title.'});
+
+		if (!/^(?=http:\/\/)|^(?=https:\/\/)/g.test(req.body.uploadHotlink)) {
+			return res.json({error: 'Please enter a URL protocol (http or https)'});
+		}
+
+		var convert = new FormData();
+
+		request.get(req.body.uploadHotlink, {timeout: 1500, encoding: null}, function(err, response, body){
+			if (err) {
+				if (err.code === "ETIMEDOUT") return res.json({error: 'request timed out.'})
+				if (err.code === 'ENOTFOUND') return res.json({error: 'invalid URL or bad DNS lookup'})
+				return res.json({error: err.message});
+			}
+			var checkBody = body.toString('hex',0,4);
+			var imageTypes = ['ffd8ffe0', '89504e47', '47494638'];
+
+			if (imageTypes.indexOf(checkBody) === -1){
+				return res.json({error: 'invalid file type'});
+			}
+			
+			convert.append('uploadHotlink', request(req.body.uploadHotlink));
+			convert.submit('http://localhost:3000/uploadHotlink', function(err, result) {
+				if (err) throw err;
+				var obj = '';
+				result.on('data', function(data){
+					obj += data;
+				});
+				result.on('end',function(){
+					obj = JSON.parse(obj);
+				});
+
+				var image = new Images({
+					imageTitle: req.body.title,
+					localImagePath: obj.path,
+					shares: 0,
+					//creator: req.user._id
+				});
+
+
+
+
+
+
+
+
+			});
+		});
+
+	};
+
+	this.uploadHotlink = function(req, res){
+		res.json(req.file);
 	};
 
 }
