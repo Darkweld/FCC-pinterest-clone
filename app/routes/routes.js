@@ -11,6 +11,10 @@ module.exports = function(app, passport) {
      if (req.isAuthenticated()) return next();
         return res.redirect('/login'); 
     }
+    function userLoggedInAPI (req, res, next) {
+     if (req.isAuthenticated()) return next();
+        return res.json({error: 'You must be logged in to do that!'}); 
+    }
     var server = new Server(passport);
     
     app.route("/")
@@ -75,11 +79,11 @@ module.exports = function(app, passport) {
         .get(server.userPage);
 
     app.route('/upload')
-    	.get(server.uploadPage)
-    	.post(upload.none(), server.convertImage);
+    	.get(userLoggedIn, server.uploadPage)
+    	.post(upload.none(),userLoggedInAPI, server.convertImage);
     
     app.route('/uploadLocal')
-    	.post(upload.single('uploadLocal'), server.uploadImage);
+    	.post(upload.single('uploadLocal'),userLoggedInAPI, server.uploadImage);
 
     app.route('/uploadHotlink')
     	.post(upload.single('uploadHotlink'), server.uploadHotlink);

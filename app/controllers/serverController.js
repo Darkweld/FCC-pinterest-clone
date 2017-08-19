@@ -4,6 +4,7 @@ var User = require('../models/user');
 var Images = require('../models/images');
 var request = require('request');
 var FormData = require('form-data');
+var fs = require('fs');
 
 function server (passport) {
 	this
@@ -101,31 +102,60 @@ function server (passport) {
 	}
 
 	this.uploadImage = function(req, res){
-		console.log(req.file);
-		console.log(req.body);
-		res.json({'query': 'completed'});
+
+		if (req.user.images.length > 10) return res.json({'error': 'You have too many images.'});
+
+		if (req.body.title.length > 20 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return res.json({error: 'Invalid title.'});
+
+
+		fs.readFile(req.file.path, function(err, data){
+			if (err) throw (err);
+
+			var checkBody = data.toString('hex',0,4);
+			var imageTypes = ['ffd8ffe0', '89504e47', '47494638','ffd8ffdb','ffd8ffe1'];
+
+			if (imageTypes.indexOf(checkBody) === -1) return res.json({error: 'invalid file type'});
+
+			var image = new Images({
+					imageTitle: req.body.title,
+					localImagePath: req.file.path,
+					shares: 0,
+					creator: req.user._id
+				});
+
+				image.save().then(function(doc) {
+						User
+						.update({'_id':req.user._id}, {$push: {'images': doc._id}})
+						.exec(function(err){
+							if (err) throw err;
+							return res.json({title: doc.imageTitle, localImagePath: doc.localImagePath});
+						});
+
+					}).catch(function(reason){
+						res.json({'error': 'error in saving image, reason: ' + reason});
+				});
+		});
+
+		
 	
 	};
 	this.convertImage = function(req, res){
 
-		if (req.user.images.length > 10) return res.json('error': 'You have too many images.');
+		if (req.user.images.length > 10) return res.json({'error': 'You have too many images.'});
 
 		if (req.body.title.length > 20 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return res.json({error: 'Invalid title.'});
 
 		if (!/^(?=http:\/\/)|^(?=https:\/\/)/g.test(req.body.uploadHotlink)) {
-			return res.json({error: 'Please enter a URL protocol (http or https)'});
+			return res.json({error: 'Please enter a URL method (http or https)'});
 		}
 
 		var convert = new FormData();
 
 		request.get(req.body.uploadHotlink, {timeout: 1500, encoding: null}, function(err, response, body){
-			if (err) {
-				if (err.code === "ETIMEDOUT") return res.json({error: 'request timed out.'})
-				if (err.code === 'ENOTFOUND') return res.json({error: 'invalid URL or bad DNS lookup'})
-				return res.json({error: err.message});
-			}
+			if (err) return res.json({error: 'Bad URL / Request or response timout from image server' + err.code});
+			
 			var checkBody = body.toString('hex',0,4);
-			var imageTypes = ['ffd8ffe0', '89504e47', '47494638'];
+			var imageTypes = ['ffd8ffe0', '89504e47', '47494638','ffd8ffdb','ffd8ffe1'];
 
 			if (imageTypes.indexOf(checkBody) === -1){
 				return res.json({error: 'invalid file type'});
@@ -140,22 +170,26 @@ function server (passport) {
 				});
 				result.on('end',function(){
 					obj = JSON.parse(obj);
+
+					var image = new Images({
+						imageTitle: req.body.title,
+						localImagePath: obj.path,
+						shares: 0,
+						creator: req.user._id
+					});
+
+					image.save().then(function(doc) {
+							User
+							.update({'_id':req.user._id}, {$push: {'images': doc._id}})
+							.exec(function(err){
+								if (err) throw err;
+								return res.json({title: doc.imageTitle, localImagePath: doc.localImagePath});
+							});
+
+						}).catch(function(reason){
+							return res.json({'error': 'error in saving image, reason: ' + reason});
+					});
 				});
-
-				var image = new Images({
-					imageTitle: req.body.title,
-					localImagePath: obj.path,
-					shares: 0,
-					//creator: req.user._id
-				});
-
-
-
-
-
-
-
-
 			});
 		});
 
