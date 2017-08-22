@@ -159,14 +159,65 @@ body {
     flex-flow: row;
     margin: 10px 0 10px 0;
 }
-.imageDiv {
-    border: 5px solid black;
-    border-radius: 25px;
-}
 .instruction {
     font-size: 20px;
 }
 .divider {
     width: 300px;
     margin: 0 auto 0 auto;
+}
+
+
+
+.imageDiv {
+    border:5px solid white;
+    border-radius: 25px;
+    margin: 5px;
+}
+
+
+
+.indexContainer {
+    text-align: center;
+    width: 80%;
+    margin: 10px auto 10px auto;
+}
+.picture-container {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: flex-start;
+}
+.image {
+    width: 200px;
+    height: auto;
+}
+.likes, .shares {
+    height: 30px;
+    width:30px;
+    display: block;
+}
+.separator {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    background-color: white;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+.likesDiv, .sharesDiv {
+    display: inline-flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    border: 1px solid black;
+}
+.likesDiv {
+    border-bottom-left-radius: 25px;
+}
+.sharesDiv {
+    border-bottom-right-radius: 25px;
 }

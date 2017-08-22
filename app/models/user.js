@@ -30,7 +30,8 @@ var User = new Schema({
    },
    localUsername: String,
    images: [{type: Schema.Types.ObjectId, ref: 'Images'}],
-   likes : [{type: Schema.Types.ObjectId, ref: 'Images'}]
+   likes : [{type: Schema.Types.ObjectId, ref: 'Images'}],
+   reshares :[{type: Schema.Types.ObjectId, ref: 'Images'}]
 });
 
 

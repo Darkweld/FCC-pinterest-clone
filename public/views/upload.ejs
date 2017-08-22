@@ -19,7 +19,7 @@
     <div class = 'uploadPageContainer' id = 'uploadPageContainer'>
     <form id = "uploadForm" class = "uploadForm" action = "">
     <p class = 'bigWhiteText'>You may choose to upload locally or with an image url, but not both.</p>
-    <p class = 'boldText'>Valid image types: PNG, GIF, JPG</p>
+    <p class = 'boldText'>Valid image types: PNG, GIF, JPG<br> Max image limit per user: 10</p>
 
     <img class = "preview" id = "Preview" src = '/public/images/error.png'>
 
@@ -37,7 +37,7 @@
       <p class = 'instruction'>Title of upload</p>
       <input type="text" id = "Title" required placeholder="Title">
       
-      <input type = 'submit' value = 'Upload' class = "button">
+      <input type = 'submit' value = 'Upload' id = "uploadButton" class = "button">
 
     </form>
     </div>

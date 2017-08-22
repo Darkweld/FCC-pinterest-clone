@@ -12,11 +12,11 @@ var dividerContainerUpload = document.getElementById('dividerContainerUpload');
 var preview = document.getElementById('Preview');
 
 document.addEventListener('DOMContentLoaded', function(event){
-	uploadHotlink.value = uploadLocal.value = "";
+	uploadHotlink.value = uploadLocal.value = title.value = "";
 }, false);
 
 preview.addEventListener('error', function(event){
-	document.getElementById('preview').src = '/public/images/error.png';
+	preview.src = '/public/images/error.png';
 	}, false);
 
 
@@ -31,12 +31,11 @@ uploadLocal.addEventListener('input', function(event){
 }, false);
 
 uploadHotlink.addEventListener('input', function(event){
-	preview.src = uploadHotlink.value;
+		 return preview.src = uploadHotlink.value;
 }, false);
 
 form.addEventListener('submit', function(event){
 	event.preventDefault();
-
 	var formdata = new FormData();
 	formdata.append("title", title.value);
 	if (uploadHotlink.value && uploadLocal.value) return alert('You may not submit two images at once.')
@@ -52,7 +51,7 @@ form.addEventListener('submit', function(event){
 	xhttp.upload('POST', url, formdata, function(data){
 		var data = JSON.parse(data);
 		if (data.error) return alert(data.error);
-		uploadHotlink.value = uploadLocal.value = "";
+		uploadHotlink.value = uploadLocal.value = title.value = "";
 		console.log(data);
 	});
 

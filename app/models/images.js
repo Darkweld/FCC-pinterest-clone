@@ -7,7 +7,7 @@ var Images = new Schema({
     imageTitle: String,
     localImagePath: String,
     shares: Number,
-    resharedFrom: {type: Schema.Types.ObjectId, ref: 'Images'},
+    original: {type: Schema.Types.ObjectId, ref: 'Images'},
     likes: [{type: Schema.Types.ObjectId, ref: 'User'}],
     creator : {type: Schema.Types.ObjectId, ref: 'User'}
 });

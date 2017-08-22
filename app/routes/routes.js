@@ -85,8 +85,15 @@ module.exports = function(app, passport) {
     app.route('/uploadLocal')
     	.post(upload.single('uploadLocal'),userLoggedInAPI, server.uploadImage);
 
-    app.route('/uploadHotlink')
-    	.post(upload.single('uploadHotlink'), server.uploadHotlink);
+    app.route('/uploadImage')
+    	.post(upload.single('uploadImage'), server.uploadHotlink);
 
+    app.route('/indexImages')
+    	.get(server.getImages);
 
+    app.route('/like/:image')
+    	.post(userLoggedInAPI, server.likeThis);
+
+    app.route('/share/:image')
+    	.post(userLoggedInAPI, server.shareThis);
 };
