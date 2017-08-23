@@ -8,6 +8,7 @@ var Images = new Schema({
     localImagePath: String,
     shares: Number,
     original: {type: Schema.Types.ObjectId, ref: 'Images'},
+    originalUsername: String,
     likes: [{type: Schema.Types.ObjectId, ref: 'User'}],
     creator : {type: Schema.Types.ObjectId, ref: 'User'}
 });

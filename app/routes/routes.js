@@ -8,11 +8,13 @@ module.exports = function(app, passport) {
     
     
     function userLoggedIn (req, res, next) {
-     if (req.isAuthenticated()) return next();
+     if (req.isAuthenticated() && req.user.localUsername) return next();
+     if (req.isAuthenticated()) return res.redirect('/username');
         return res.redirect('/login'); 
     }
     function userLoggedInAPI (req, res, next) {
-     if (req.isAuthenticated()) return next();
+     if (req.isAuthenticated() && req.user.localUsername) return next();
+     if (req.isAuthenticated()) return res.json({error: 'You must be select a local username in to do that!'}); 
         return res.json({error: 'You must be logged in to do that!'}); 
     }
     var server = new Server(passport);
@@ -96,4 +98,13 @@ module.exports = function(app, passport) {
 
     app.route('/share/:image')
     	.post(userLoggedInAPI, server.shareThis);
+
+    app.route(['checkUsername', '/checkUsername/:username'])
+    	.post(server.checkUsername)
+
+    app.route('/username')
+    	.get(server.renderUsername);
+
+    app.route(['/getUsernameImages/', '/getUsernameImages/:user'])
+    	.get(server.getUsernameImages);
 };

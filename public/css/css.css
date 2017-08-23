@@ -170,9 +170,9 @@ body {
 
 
 .imageDiv {
-    border:5px solid white;
     border-radius: 25px;
     margin: 5px;
+    background-color: white;
 }
 
 
@@ -203,8 +203,8 @@ body {
     flex-flow: row;
     flex-wrap: nowrap;
     background-color: white;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 100%;
+    border-bottom-left-radius: 100%;
 }
 .likesDiv, .sharesDiv {
     display: inline-flex;
@@ -220,4 +220,18 @@ body {
 }
 .sharesDiv {
     border-bottom-right-radius: 25px;
+}
+.likes, .shares, .likesText, .sharesText {
+    pointer-events: none;
+    -moz-user-select:none;
+}
+.reshareDiv {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 3px solid black;
+}
+.username {
+    margin:0;
 }

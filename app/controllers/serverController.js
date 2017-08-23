@@ -22,7 +22,7 @@ function server(passport) {
 
     this
         .githubCallback = passport.authenticate('github', {
-            successRedirect: '/',
+            successRedirect: '/profile',
             failureRedirect: '/login'
         });
 
@@ -33,7 +33,7 @@ function server(passport) {
 
     this
         .googleCallback = passport.authenticate('google', {
-            successRedirect: '/',
+            successRedirect: '/profile',
             failureRedirect: '/login'
         });
 
@@ -42,7 +42,7 @@ function server(passport) {
 
     this
         .twitterCallback = passport.authenticate('twitter', {
-            successRedirect: '/',
+            successRedirect: '/profile',
             failureRedirect: '/login'
         });
 
@@ -51,7 +51,7 @@ function server(passport) {
 
     this
         .facebookCallback = passport.authenticate('facebook', {
-            successRedirect: '/',
+            successRedirect: '/profile',
             failureRedirect: '/login'
         });
 
@@ -343,9 +343,9 @@ function server(passport) {
                 if (doc.images.length > 10) return res.json({
                     'error': 'You have too many images. (Limit: 10)'
                 });
-                if (doc.images.indexOf(req.params.image) !== -1) return res.json({
-                    'error': 'You cannot reshare your own image!'
-                });
+                //if (doc.images.indexOf(req.params.image) !== -1) return res.json({
+                  //  'error': 'You cannot reshare your own image!'
+              //  });
                 if (doc.reshares.indexOf(req.params.image) !== -1) return res.json({
                     'error': 'You have already reshared that image!'
                 });
@@ -353,6 +353,7 @@ function server(passport) {
                     .findOne({
                         '_id': req.params.image
                     })
+                    .populate('creator', 'localUsername')
                     .then(function(image) {
                         if (image.original && doc.reshares.indexOf(image.original.toString()) !== -1) return res.json({
                             'error': 'You have already reshared that image!'
@@ -383,6 +384,7 @@ function server(passport) {
                                             localImagePath: obj.path,
                                             shares: 0,
                                             original: image.original || image._id,
+                                            originalUsername: image.creator.localUsername,
                                             creator: req.user._id
                                         });
 
@@ -398,10 +400,7 @@ function server(passport) {
                                                 })
                                                 .exec(function(err) {
                                                     if (err) throw err;
-                                                    return res.json({
-                                                        resharedImage: doc.imageTitle,
-                                                        localImagePath: resharedImage.localImagePath
-                                                    });
+                                                    return res.json({newImage: [newImage], username: doc.localUsername, shares: (image.shares + 1)});
                                                 });
 
                                         }).catch(function(reason) {
@@ -426,11 +425,63 @@ function server(passport) {
     this.getImages = function(req, res) {
         Images
             .find({})
+            .populate('creator', 'localUsername')
             .exec(function(err, doc) {
                 if (err) throw err;
                 res.json(doc);
             });
     };
+    this.checkUsername = function(req, res){
+    	if (!req.isAuthenticated()) return res.json({'error': 'you must be logged in to do that.'});
+
+    	if (!req.params.username) {
+			return res.json({'error': 'please enter a username'});
+		}
+
+		if (/\W/.test(req.params.username) || req.params.username.length > 20) {
+			return res.json({'error': 'please enter a valid username'})
+		}
+
+		User
+		.find({'localUsername' : req.params.username})
+		.then(function(doc) {
+			if (doc.length) {
+				return res.json({'error': 'that username is already taken'});
+			}
+
+			User
+			.update({'_id': req.user._id}, {'localUsername': req.params.username})
+			.exec(function(err, result) {
+					if (err) throw err;
+					return res.json({'success': req.params.username});
+
+			});
+
+
+		}).catch(function(reject){
+			console.log('error in finding username thenable, reason: ' + reject);
+		})
+
+
+	};
+
+
+    this.renderUsername = function(req, res){
+    	if (req.isAuthenticated()) return res.render('username', {user: req.user});
+    	return res.redirect('/login');
+    }
+    this.getUsernameImages = function(req, res){
+    	if (!req.params.user) return res.json({'error': "That user does not exist"})
+
+    	User
+    		.findOne({'localUsername': req.params.user})
+    		.populate({path:'images',
+    			populate:{path: 'creator', select: 'localUsername'}})
+    		.exec(function(err, doc){
+    			if (err) throw err;
+    			return res.json(doc.images);
+    		});
+    }
 
 }
 module.exports = server;

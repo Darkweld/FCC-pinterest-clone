@@ -1,0 +1,58 @@
+<html>
+  <head>
+    
+    <link href = "public/css/css.css" type = "text/css" rel = "stylesheet">
+    
+    
+  </head>
+  
+  <body>
+    <div class =  "link-container">
+      <% if (user.localUsername) { %>
+      <a href = "/">Home</a>
+      <a href = "/profile">Profile</a>
+      <a href = "/findbooks">Find Books</a>
+      <a href = "/myRequests">Requests<% if (user.requestsRecieved.length) { %> <span class = "requestNotification"><%=user.requestsRecieved.length%></span><% } %></a>
+      <a href = "/logout">Logout</a>
+    <% } else { %>
+      <a href = "/">Home</a>
+      <a href = "/logout">Logout</a>
+    <% } %>
+    </div>
+
+    <div class = "username-container" id = 'userNameContainer'>
+    <% if (user.localUsername) { %>
+    <p class = 'boldText' id = "yourUsername"> Your current book-club username is: <%= user.localUsername %> </p>
+    <% } %>
+    <form id = "Username" action = "">
+      <p class = "boldTextColor">You must select a username to trade books.<br>
+      Max length 20 characters. No special characters besides underscores e.g. "%$#%@". </p>
+      <input type = "text" id = "usernameValue" class = "usernameValue" placeholder="Enter username here...">
+    </form>
+    </div>
+
+
+
+    <script type = 'text/javascript' src = '/ajax/requests.js'></script>
+    <script type = 'text/javascript' src = '/controllers/usernameController.js'></script>
+    
+    
+    
+    
+  </body>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</html>
