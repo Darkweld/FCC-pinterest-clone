@@ -74,6 +74,7 @@ body {
     left: 0;
     right: 0;
     margin: 0 auto 10px auto;
+    z-index: 2;
 }
 .link-container a{
     color: #80b3b3;
@@ -140,7 +141,15 @@ body {
     font-weight: 700;
     font-size:20px;
 }
-
+.absoluteErrorText {
+    position: absolute;;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    color: red;
+    font-weight: 700;
+}
 
 .preview {
     width: 200px;
@@ -166,30 +175,25 @@ body {
     width: 300px;
     margin: 0 auto 0 auto;
 }
-
-
-
-.imageDiv {
-    border-radius: 25px;
-    margin: 5px;
-    background-color: white;
+.image-container {
+    column-count: 4;
+    column-gap: 1em;
 }
-
-
-
+.imageDiv, .profileImageDiv {
+    background-color: white;
+    border-radius: 25px;
+    display: inline-block;
+    margin: 0 0 1em;
+    width: 100%;
+    overflow: hidden;
+}
 .indexContainer {
     text-align: center;
-    width: 80%;
+    width: 95%;
     margin: 10px auto 10px auto;
 }
-.picture-container {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-    align-items: flex-start;
-}
 .image {
-    width: 200px;
+    width: 100%;
     height: auto;
 }
 .likes, .shares {
@@ -221,7 +225,7 @@ body {
 .sharesDiv {
     border-bottom-right-radius: 25px;
 }
-.likes, .shares, .likesText, .sharesText {
+.likes, .shares, .likesText, .sharesText, .image, .title {
     pointer-events: none;
     -moz-user-select:none;
 }
@@ -234,4 +238,24 @@ body {
 }
 .username {
     margin:0;
+}
+.bigDiv {
+    position: absolute;
+    left:0;
+    right: 0;
+    top: 300px;
+    width: 30%;
+    border-radius: 25px;
+    background-color: white;
+}
+.profileImageContainer {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+.profileImageDiv {
+    display: block;
+    width: 20%;
+    margin: 10px;
 }

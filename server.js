@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 app.set('views', 'public/views');
 
 app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
+app.use('/node_modules', express.static(process.cwd() + '/node_modules/masonry-layout'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/uploads', express.static(process.cwd() + '/public/images/uploads'));
 app.use('/css', express.static(process.cwd() + '/public/css'));

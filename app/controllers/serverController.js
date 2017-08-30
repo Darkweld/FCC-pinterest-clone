@@ -103,6 +103,7 @@ function server(passport) {
     this.userPage = function(req, res) {
         User
             .findOne(req.user._id)
+            .populate('images')
             .exec(function(err, doc) {
                 if (err) throw err;
                 res.json(doc)
@@ -116,8 +117,8 @@ function server(passport) {
 
     this.uploadImage = function(req, res) {
 
-        if (req.user.images.length > 10) return res.json({
-            'error': 'You have too many images.'
+        if (req.user.images.length >= 10) return res.json({
+            'error': 'You have too many images. (Limit: 10)'
         });
 
         if (req.body.title.length > 20 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return res.json({
@@ -173,7 +174,7 @@ function server(passport) {
 
 
 
-        if (req.user.images.length > 10) return res.json({
+        if (req.user.images.length >= 10) return res.json({
             'error': 'You have too many images.(Limit: 10)'
         });
 
@@ -340,7 +341,7 @@ function server(passport) {
                 '_id': req.user._id
             })
             .then(function(doc) {
-                if (doc.images.length > 10) return res.json({
+                if (doc.images.length >= 10) return res.json({
                     'error': 'You have too many images. (Limit: 10)'
                 });
                 //if (doc.images.indexOf(req.params.image) !== -1) return res.json({
@@ -400,7 +401,7 @@ function server(passport) {
                                                 })
                                                 .exec(function(err) {
                                                     if (err) throw err;
-                                                    return res.json({newImage: [newImage], username: doc.localUsername, shares: (image.shares + 1)});
+                                                    return res.json({'newid': resharedImage._id});
                                                 });
 
                                         }).catch(function(reason) {
@@ -423,6 +424,18 @@ function server(passport) {
     };
 
     this.getImages = function(req, res) {
+
+    	if (req.params.image) {
+    		Images
+            .findOne({'_id': req.params.image})
+            .populate('creator', 'localUsername')
+            .exec(function(err, doc) {
+            	if (!doc) return res.json({'error': "No images found with that identifier"});
+                if (err) throw err;
+                res.json([doc]);
+            });
+    	} else {
+
         Images
             .find({})
             .populate('creator', 'localUsername')
@@ -430,6 +443,7 @@ function server(passport) {
                 if (err) throw err;
                 res.json(doc);
             });
+        }
     };
     this.checkUsername = function(req, res){
     	if (!req.isAuthenticated()) return res.json({'error': 'you must be logged in to do that.'});

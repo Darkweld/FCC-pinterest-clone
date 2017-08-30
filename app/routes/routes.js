@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
     app.route('/uploadImage')
     	.post(upload.single('uploadImage'), server.uploadHotlink);
 
-    app.route('/indexImages')
+    app.route(['/indexImages', '/indexImages/:image'])
     	.get(server.getImages);
 
     app.route('/like/:image')

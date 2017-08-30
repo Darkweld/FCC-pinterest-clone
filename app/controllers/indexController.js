@@ -2,11 +2,17 @@
 
 (function(){
 var imageContainer = document.getElementById('Pictures');
+var indexContainer = document.getElementById('indexContainer');
+var buttonContainer = document.getElementById('buttonContainer');
 
-var reappend;
 
-function createImages(array, imageUsername){
+function createImages(array){
 	var fragment = new DocumentFragment();
+
+	while (imageContainer.hasChildNodes()){
+		imageContainer.removeChild(imageContainer.firstChild);
+	}
+
 	for (var i = 0, l = array.length - 1; l >= i; l--){
 
 		var imageDiv = document.createElement('div');
@@ -16,7 +22,7 @@ function createImages(array, imageUsername){
 
 		var username = document.createElement('p');
 		username.className = 'username';
-		username.textContent = array[l].creator.localUsername || imageUsername;
+		username.textContent = array[l].creator.localUsername;
 
 		var shares = document.createElement('img');
 		shares.src = "/public/images/shares.png";
@@ -82,17 +88,88 @@ function createImages(array, imageUsername){
 	return fragment;
 };
 
-function addEvents (parent) {
+function get(urlAffix){
+xhttp.request('GET', mainUrl + urlAffix, function(data){
+		var data = JSON.parse(data);
+		if (data.error) alert(data.error);
+		imageContainer.appendChild(createImages(data));
+	});
+};
+function usernameAppend(value) {
+	get('/getUsernameImages/' + value);
+
+					while(buttonContainer.hasChildNodes()) {
+						buttonContainer.removeChild(buttonContainer.lastChild);
+					}
+
+					var usernameText = document.createElement('p');
+					usernameText.textContent = value;
+					usernameText.id = "Username";
+					buttonContainer.appendChild(usernameText);
+
+					var span = document.createElement('span');
+					span.textContent = "'s images";
+					usernameText.appendChild(span);
+
+					var backButton = document.createElement('button');
+					backButton.textContent = "Show all images";
+					backButton.addEventListener('click', function(e){
+					while (buttonContainer.hasChildNodes()) {
+						buttonContainer.removeChild(buttonContainer.lastChild);
+					}
+					get('/indexImages');
+					}, false)
+
+					buttonContainer.appendChild(backButton);
+}
+
+function singleImage(target) {
+
+	xhttp.request('GET', mainUrl + '/indexImages/' + target, function(data){
+		var data = JSON.parse(data);
+		if (data.error) {
+			var p = document.createElement('p');
+			p.textContent = data.error;
+			p.className = 'absoluteErrorText';
+			imageContainer.appendChild(p);
+		} else {
+		imageContainer.appendChild(createImages(data));
+		imageContainer.children[0].className = "bigDiv";
+		}
+		var backButton = document.createElement('button');
+
+	if (document.getElementById('Username')) {
+		var val = document.getElementById('Username').firstChild.textContent;
+		buttonContainer.removeChild(document.getElementById('Username'));
+		backButton.textContent = "Back to " + val + "'s images";
+		imageContainer.children[0].addEventListener('click',function(ev){
+			usernameAppend(val);
+		}, false);
+		backButton.addEventListener('click',function(ev){
+			usernameAppend(val);
+		}, false);
+	} else {
+		backButton.textContent = 'Show all images';
+		imageContainer.children[0].addEventListener('click', function(ev){
+		get('/indexImages');
+		buttonContainer.removeChild(backButton);
+		}, false);
+		backButton.addEventListener('click', function(ev){
+		get('/indexImages');
+		buttonContainer.removeChild(backButton);
+		}, false);
+	}
+
+	buttonContainer.appendChild(backButton);
+	});
+
+};
 	
-	parent.addEventListener('click', function(event){
-		console.log(event.target);
+	imageContainer.addEventListener('click', function(event){
 		switch(event.target.className){
 			case "imageDiv":
-			console.log(event.target.id);
-			break;
-			case "imageTitle":
-			case "image":
-			console.log(event.target.parentNode.id);
+
+			singleImage(event.target.id)
 			break;
 			case "likesDiv":
 				xhttp.request('POST', mainUrl + '/like/' + event.target.parentNode.parentNode.id, function(likeData){
@@ -105,37 +182,34 @@ function addEvents (parent) {
 			case "sharesDiv":
 			xhttp.request('POST', mainUrl + '/share/' + event.target.parentNode.parentNode.id, function(shareData){
 				var shareData = JSON.parse(shareData);
-					if (shareData.error) return alert(shareData.error);
-					imageContainer.insertBefore(createImages(shareData.newImage, shareData.username), imageContainer.firstChild);
-					return event.target.getElementsByTagName('p')[0].textContent = shareData.shares;
+				if (shareData.error) return alert(shareData.error);
+				singleImage(shareData.newid);
 				});
 				break;
 
 			case "username":
-			xhttp.request('GET', mainUrl + '/getUsernameImages/' + event.target.textContent, function(getImages){
-				var getImages = JSON.parse(getImages);
-					if (getImages.error) return alert(getImages.error);
-					while (imageContainer.hasChildNodes()) {
-						imageContainer.removeChild(imageContainer.firstChild);
-					}
-					imageContainer.appendChild(createImages(getImages))
-				});
-				break;
+			usernameAppend(event.target.textContent);
+			break;
 		}
 
 	}, false)
 
-}
 
-document.addEventListener('DOMContentLoaded', function(event){
-	xhttp.request('GET', mainUrl + "/indexImages", function(data){
-		var data = JSON.parse(data);
-		console.log(data);
-		addEvents(imageContainer);
-		imageContainer.appendChild(createImages(data));
 
-	})
-}, false)
+
+
+
+function ready(event){
+	document.removeEventListener('DOMContentLoaded', ready);
+	if (window.location.hash) {
+		var image = window.location.hash.slice(1, window.location.hash.length)
+		singleImage(image);
+		return window.location.hash = "";
+	}
+	get('/indexImages');
+};
+
+document.addEventListener('DOMContentLoaded', ready);
 
 
 
