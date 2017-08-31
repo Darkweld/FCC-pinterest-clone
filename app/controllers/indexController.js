@@ -127,6 +127,7 @@ function singleImage(target) {
 
 	xhttp.request('GET', mainUrl + '/indexImages/' + target, function(data){
 		var data = JSON.parse(data);
+		var thisChild;
 		if (data.error) {
 			var p = document.createElement('p');
 			p.textContent = data.error;
@@ -134,26 +135,45 @@ function singleImage(target) {
 			imageContainer.appendChild(p);
 		} else {
 		imageContainer.appendChild(createImages(data));
-		imageContainer.children[0].className = "bigDiv";
+		thisChild = imageContainer.children[0];
+		var bigDiv = document.createElement('div');
+		bigDiv.className = 'bigDiv';
+		thisChild.className = "bigProfileDiv";
+		bigDiv.appendChild(thisChild);
+
+			var shareLinksDiv = document.createElement('div');
+			shareLinksDiv.className = "shareLinksDiv";
+
+			var inputLabel = document.createElement('p');
+			inputLabel.textContent = "Link to share image with friends!";
+			shareLinksDiv.appendChild(inputLabel);
+
+			var shareLinksInput = document.createElement('input');
+			shareLinksInput.className = 'profileInput';
+
+			var actualLink = document.createElement('a');
+			actualLink.textContent = 'Link';
+			actualLink.className = 'profileLink';
+			actualLink.href = shareLinksInput.value = mainUrl + '/#' + thisChild.id;
+
+			shareLinksDiv.appendChild(shareLinksInput);
+			shareLinksDiv.appendChild(actualLink);
+
+			bigDiv.appendChild(shareLinksDiv);
+			imageContainer.appendChild(bigDiv);
 		}
+
 		var backButton = document.createElement('button');
 
 	if (document.getElementById('Username')) {
 		var val = document.getElementById('Username').firstChild.textContent;
 		buttonContainer.removeChild(document.getElementById('Username'));
 		backButton.textContent = "Back to " + val + "'s images";
-		imageContainer.children[0].addEventListener('click',function(ev){
-			usernameAppend(val);
-		}, false);
 		backButton.addEventListener('click',function(ev){
 			usernameAppend(val);
 		}, false);
 	} else {
 		backButton.textContent = 'Show all images';
-		imageContainer.children[0].addEventListener('click', function(ev){
-		get('/indexImages');
-		buttonContainer.removeChild(backButton);
-		}, false);
 		backButton.addEventListener('click', function(ev){
 		get('/indexImages');
 		buttonContainer.removeChild(backButton);

@@ -1,6 +1,9 @@
 body {
     background-color: darkslategray;
 }
+p {
+ font-size: 3vh;
+}
 .login-container {
     width: 270px;
     margin: 10% auto 10% auto;
@@ -69,23 +72,27 @@ body {
     background-color: dimgray;
     position: fixed;
     padding: 5px;
-    border-radius: 10px;
     top:0px;
     left: 0;
     right: 0;
     margin: 0 auto 10px auto;
-    z-index: 2;
+    z-index: 5;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    max-height: 10vh;
 }
 .link-container a{
     color: #80b3b3;
-    display: inline-block;
     background-color: black;
-    padding: 10px;
-    width: 100px;
-    margin: 0 auto 0 auto;
-    border-radius: 10px;
-    border: 1px solid white;
+    margin: 1vh;
+    border: .5vh solid white;
     text-decoration: none;
+    font-size: 3vh;
+    padding: 1vh;
+    border-radius: 1vh;
 }
 
 
@@ -112,18 +119,11 @@ body {
 .profile-heading {
     font-weight: 700;
 }
-.profile-book-container {
-    border: 5px solid white;
-    display: none;
-    justify-content: center;
-    flex-flow: row;
-    flex-wrap: wrap;
-    margin: 10px auto 10px auto;
-}
 .title {
     color: white;
     margin: 5% 0 0 0;
     text-align: center;
+    font-size: 10vh;
 }
 .link, .link:visited {
     color: black;
@@ -133,13 +133,13 @@ body {
 }
 .bigWhiteText {
     color: white;
-    font-size: 30px;
+    font-size: 5vh;
     margin: 10px 0 10px 0;
     font-weight: 600;
 }
 .boldText {
     font-weight: 700;
-    font-size:20px;
+    font-size: 5vh;
 }
 .absoluteErrorText {
     position: absolute;;
@@ -197,8 +197,8 @@ body {
     height: auto;
 }
 .likes, .shares {
-    height: 30px;
-    width:30px;
+    height: 5vh;
+    width: 5vh;
     display: block;
 }
 .separator {
@@ -239,23 +239,85 @@ body {
 .username {
     margin:0;
 }
-.bigDiv {
-    position: absolute;
+.dimmer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
     left:0;
-    right: 0;
-    top: 300px;
-    width: 30%;
-    border-radius: 25px;
-    background-color: white;
+    top:0;
+    background-color: black;
+    opacity: .5;
+    z-index: 3;
 }
 .profileImageContainer {
     display: flex;
     flex-flow: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 .profileImageDiv {
     display: block;
     width: 20%;
     margin: 10px;
+}
+.bigDivHolder, .bigDiv{
+    position: absolute;
+    width: 50%;
+    z-index: 4;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+.bigDivHolder {
+    z-index: 4;
+    top: 15%;
+}
+.bigDiv {
+    margin: 10px auto 10px auto;
+    left: 0;
+    right: 0;
+}
+
+.bigProfileDiv {
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: white;
+    width: 50%;
+}
+.shareLinksDiv {
+    width: 45%;
+    background-color: white;
+    padding: 10px;
+    margin-left: 5vh;
+    border-radius: 25px
+}
+.profileInput, .profileLink{
+    display: block;
+}
+.profileInput {
+    margin: 10px auto 10px auto;
+    font-size: 3vh;
+}
+.profileLink {
+    color: black;
+    font-size: 3 vh;
+}
+.pagination {
+    display: inline-flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+}
+.paginationLink {
+    display: block;
+    color: white;
+    background-color: black;
+    margin: 1vh;
+    padding: 2vh;
+    font-size: 2em;
+}
+.paginationLinkActive {
+    color: red;
+    background-color: white;
 }

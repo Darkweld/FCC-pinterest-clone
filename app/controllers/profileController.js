@@ -16,10 +16,75 @@
          
 }
 
+function click(target) {
+	var children = profileImageContainer.childNodes;
+
+	var num;
+
+	for (var i = 0, l = children.length; i < l; i++){
+		if (children[i].id === target.id) {
+			num = i;
+			break;
+		}
+	}
+
+
+	target.className = 'bigProfileDiv';
+	var dimmer = document.createElement('div');
+	dimmer.className = 'dimmer';
+	profileImageContainer.appendChild(dimmer);
+
+	var bigDivHolder = document.createElement('div');
+	bigDivHolder.className = 'bigDivHolder';
+	bigDivHolder.appendChild(target);
+
+	var shareLinksDiv = document.createElement('div');
+	shareLinksDiv.className = "shareLinksDiv";
+
+	var inputLabel = document.createElement('p');
+	inputLabel.textContent = "Link to share image with friends!";
+	shareLinksDiv.appendChild(inputLabel);
+
+	var shareLinksInput = document.createElement('input');
+	shareLinksInput.className = 'profileInput';
+
+	var actualLink = document.createElement('a');
+	actualLink.textContent = 'Link';
+	actualLink.className = 'profileLink';
+	actualLink.href = shareLinksInput.value = mainUrl + '/#' + target.id;
+
+	shareLinksDiv.appendChild(shareLinksInput);
+	shareLinksDiv.appendChild(actualLink);
+
+	bigDivHolder.appendChild(shareLinksDiv);
+	profileImageContainer.appendChild(bigDivHolder);
+	window.scroll(0,0);
+
+	function addClick(event){
+
+		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
+			profileImageContainer.removeChild(dimmer);
+			target.className = "profileImageDiv";
+			profileImageContainer.insertBefore(target, profileImageContainer.children[num]);
+			profileImageContainer.removeChild(bigDivHolder);
+			profileImageContainer.scrollIntoView()
+			document.removeEventListener('click', addClick);
+		}
+	}
+	document.addEventListener('click', addClick);
+
+
+
+}
+
+
+
 function createImages(array){
 	var fragment = new DocumentFragment();
 	var pagination = document.createElement('div');
 	pagination.className = "pagination";
+	pagination.id = 'pagination';
+	profileImageText.textContent = "Your Images";
 
 	for (var i = 0, l = array.length; i < l; i++){
 
@@ -99,9 +164,24 @@ function createImages(array){
 			profileImageContainer.className = 'profileImageContainer';
 			profileImageContainer.id = "profileImageContainer";
 			profileImageContainer.appendChild(fragment);
+			profileImageContainer.addEventListener('click',function (ev){
+					switch(ev.target.className){
+						case "delete":
+						break;
+						case 'profileImageDiv':
+						ev.stopPropagation();
+						click(ev.target);
+						break;
+					}
+				}, false);
 			(function(link, div){
 				link.addEventListener('click', function(event){
 					if (document.getElementById('profileImageContainer')) main.removeChild(document.getElementById('profileImageContainer'));
+					var children = pagination.childNodes;
+					for (var k = 0; k < children.length; k++){
+						children[k].classList.remove('paginationLinkActive');
+					}
+					link.classList.add('paginationLinkActive');
 					main.appendChild(div);
 
 				}, false);
@@ -111,7 +191,6 @@ function createImages(array){
 		}
 
 	}
-	profileImageText.textContent = "Your Images";
 	main.appendChild(pagination);
 }
 
@@ -123,7 +202,7 @@ function createImages(array){
 	xhttp.request("GET", recieveprofileUrl, function(data){
 			var data = JSON.parse(data);
 			profilePage(data);
-			if (data.images) return createImages(data.images);
+			if (data.images.length) return createImages(data.images);
 			return profileImageText.textContent = "You do not have any images";
 	});
 
