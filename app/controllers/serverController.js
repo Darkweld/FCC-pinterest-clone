@@ -497,5 +497,27 @@ function server(passport) {
     		});
     }
 
+    this.deleteImage = function(req, res){
+
+    	Images
+    		.findOne({'_id': req.params.image})
+    		.then(function(image){
+    			if (!image) return res.json ({error: 'Image not found. May have alredy been deleted.'})
+    			User
+    			.update({'_id': req.user._id}, {$pull: {'images': image._id}})
+    			.then(function(){
+    				Images
+    					.remove({'_id': image._id}, function(err){
+    						if (err) return res.json({error: 'Error in removing image'});
+    						res.json({'completed': ""})
+    					})
+    			}).catch(function(reason){
+    			return res.json({error: 'Error in removing image from user.'});
+    			});
+    		}).catch(function(reason){
+    			return res.json({error: 'Error in finding image.'});
+    		});
+    }
+
 }
 module.exports = server;

@@ -38,8 +38,11 @@ function click(target) {
 	bigDivHolder.className = 'bigDivHolder';
 	bigDivHolder.appendChild(target);
 
+	var dividerColumn = document.createElement('div');
+	dividerColumn.className = "dividerColumn";
+
 	var shareLinksDiv = document.createElement('div');
-	shareLinksDiv.className = "shareLinksDiv";
+	shareLinksDiv.className = "profileLinksDiv";
 
 	var inputLabel = document.createElement('p');
 	inputLabel.textContent = "Link to share image with friends!";
@@ -56,7 +59,28 @@ function click(target) {
 	shareLinksDiv.appendChild(shareLinksInput);
 	shareLinksDiv.appendChild(actualLink);
 
-	bigDivHolder.appendChild(shareLinksDiv);
+	var deleteDiv = document.createElement('div');
+	deleteDiv.className = "deleteLinksDiv";
+
+	var deleteButton = document.createElement('button');
+	deleteButton.className = "deleteButton";
+	deleteButton.textContent = "Delete image";
+	deleteButton.addEventListener('click', function(e){
+		xhttp.request('DELETE', mainUrl + '/deleteImage/' + target.id, function(d) {
+			var d = JSON.parse(d);
+			if (d.error) alert (d.error);
+			profileImageContainer.removeChild(dimmer);
+			profileImageContainer.removeChild(bigDivHolder);
+			profileImageContainer.scrollIntoView();
+			document.removeEventListener('click', addClick);
+		});
+	}, false);
+	deleteDiv.appendChild(deleteButton);
+
+	dividerColumn.appendChild(shareLinksDiv);
+	dividerColumn.appendChild(deleteDiv);
+
+	bigDivHolder.appendChild(dividerColumn);
 	profileImageContainer.appendChild(bigDivHolder);
 	window.scroll(0,0);
 
@@ -67,13 +91,11 @@ function click(target) {
 			target.className = "profileImageDiv";
 			profileImageContainer.insertBefore(target, profileImageContainer.children[num]);
 			profileImageContainer.removeChild(bigDivHolder);
-			profileImageContainer.scrollIntoView()
+			profileImageContainer.scrollIntoView();
 			document.removeEventListener('click', addClick);
 		}
 	}
 	document.addEventListener('click', addClick);
-
-
 
 }
 
@@ -165,13 +187,9 @@ function createImages(array){
 			profileImageContainer.id = "profileImageContainer";
 			profileImageContainer.appendChild(fragment);
 			profileImageContainer.addEventListener('click',function (ev){
-					switch(ev.target.className){
-						case "delete":
-						break;
-						case 'profileImageDiv':
+				if (ev.target.className === "profileImageDiv") {
 						ev.stopPropagation();
 						click(ev.target);
-						break;
 					}
 				}, false);
 			(function(link, div){
@@ -183,7 +201,7 @@ function createImages(array){
 					}
 					link.classList.add('paginationLinkActive');
 					main.appendChild(div);
-
+					window.scrollTo(0,document.body.scrollHeight);
 				}, false);
 			})(link, profileImageContainer)
 			pagination.appendChild(link);

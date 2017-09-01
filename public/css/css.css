@@ -5,18 +5,21 @@ p {
  font-size: 3vh;
 }
 .login-container {
-    width: 270px;
+    width: 30%;
     margin: 10% auto 10% auto;
     background-color: dimgray;
-    border-radius: 10px;
-    padding: 5px;
+    border-radius: 10vh;
+    padding: 1vh;
 }
 .loginbutton {
-    margin: 10px auto 10px auto;
-    width: 250px;
-    height: 42px;
-    border-radius: 10px;
-    position: relative;
+    margin: 1vh auto 1vh auto;
+    width: 90%;
+    height: 10vh;
+    border-radius: 5vh;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 .loginbutton-github {
     background-color: black;
@@ -43,29 +46,26 @@ p {
     background-color: #8b9dc3;
 }
 .logo {
-    height: 32px;
-    width: 32px;
-    padding: 5px;
-    border-radius: 10px 0 0 10px;
+    height: 8vh;
+    width: 8vh;
+    padding: 1vh;
+    border-radius: 5vh 0 0 5vh;
 }
 .loginbutton a {
-    position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
     z-index: 1;
-    border-radius: 10px;
+    border-radius: 5vh;
+    display: inline-block;
 }
 .loginbutton p {
     position: absolute;
     color: white;
-    width: 100%;
-    height: 100%;
-    top: -5px;
-    left: 15px;
     display: inline-block;
     text-align: center;
+    left: 0;
+    right: 0;
+    font-size: 5vh;
 }
 .link-container {
     text-align: center;
@@ -103,18 +103,18 @@ p {
     text-align: center;
 }
 .profile-container {
-    width: 350px;
-    margin: 5% auto 0px auto;
+    width: 30%;
+    margin: 5% auto 0 auto;
     background-color: dimgray;
-    border-radius: 10px;
-    padding: 5px;
+    border-radius: 10vh;
+    padding: 1vh;
 }
 .profile {
-    width: 300px;
+    width: 90%;
     background-color: #80b3b3;
-    border-radius: 10px;
-    margin: 10px auto 10px auto;
-    padding: 5px;  
+    border-radius: 5vh;
+    margin: 2.5vh auto 2.5vh auto;
+    padding: 1vh;  
 }
 .profile-heading {
     font-weight: 700;
@@ -177,13 +177,13 @@ p {
 }
 .image-container {
     column-count: 4;
-    column-gap: 1em;
+    column-gap: 1vh;
 }
 .imageDiv, .profileImageDiv {
     background-color: white;
-    border-radius: 25px;
+    border-radius: 5vh;
     display: inline-block;
-    margin: 0 0 1em;
+    margin: 0 0 1vh;
     width: 100%;
     overflow: hidden;
 }
@@ -207,8 +207,6 @@ p {
     flex-flow: row;
     flex-wrap: nowrap;
     background-color: white;
-    border-bottom-right-radius: 100%;
-    border-bottom-left-radius: 100%;
 }
 .likesDiv, .sharesDiv {
     display: inline-flex;
@@ -220,10 +218,10 @@ p {
     border: 1px solid black;
 }
 .likesDiv {
-    border-bottom-left-radius: 25px;
+    border-bottom-left-radius: 5vh;
 }
 .sharesDiv {
-    border-bottom-right-radius: 25px;
+    border-bottom-right-radius: 5vh;
 }
 .likes, .shares, .likesText, .sharesText, .image, .title {
     pointer-events: none;
@@ -258,10 +256,10 @@ p {
 .profileImageDiv {
     display: block;
     width: 20%;
-    margin: 10px;
+    margin: 1vh;
 }
-.bigDivHolder, .bigDiv{
-    position: absolute;
+.bigDivHolder {
+    position: fixed;
     width: 50%;
     z-index: 4;
     display: flex;
@@ -269,19 +267,13 @@ p {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: flex-start;
-}
-.bigDivHolder {
-    z-index: 4;
-    top: 15%;
-}
-.bigDiv {
-    margin: 10px auto 10px auto;
     left: 0;
     right: 0;
+    top: 10%;
+    margin: 0 auto 0 auto;
 }
-
 .bigProfileDiv {
-    border-radius: 25px;
+    border-radius: 5vh;
     overflow: hidden;
     background-color: white;
     width: 50%;
@@ -289,20 +281,21 @@ p {
 .shareLinksDiv {
     width: 45%;
     background-color: white;
-    padding: 10px;
+    padding: 1vh;
     margin-left: 5vh;
-    border-radius: 25px
+    border-radius: 5vh;
 }
 .profileInput, .profileLink{
     display: block;
 }
 .profileInput {
-    margin: 10px auto 10px auto;
+    margin: 1vh auto 1vh auto;
     font-size: 3vh;
+    width: 90%;
 }
 .profileLink {
     color: black;
-    font-size: 3 vh;
+    font-size: 3vh;
 }
 .pagination {
     display: inline-flex;
@@ -315,9 +308,34 @@ p {
     background-color: black;
     margin: 1vh;
     padding: 2vh;
-    font-size: 2em;
+    font-size: 3vh;
 }
 .paginationLinkActive {
     color: red;
     background-color: white;
+}
+.button, .deleteButton {
+    font-size: 3vh;
+}
+.deleteButton {
+    background-color: red;
+    color: white;
+    padding: 1vh;
+    border-radius: 1vh;
+}
+.profileLinksDiv, .deleteLinksDiv {
+    width: 100%;
+    background-color: white;
+    padding: 1vh;
+    border-radius: 5vh;
+}
+.deleteLinksDiv {
+    margin-top: 5vh;
+}
+.dividerColumn {
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    width: 45%;
+    margin-left: 5vh;
 }

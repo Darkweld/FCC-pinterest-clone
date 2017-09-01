@@ -16,8 +16,8 @@
                 <p><span class = "profile-heading">Github Profile:</span> <a href =<%= user.github.profileUrl %>><%= user.github.profileUrl %></a></p>
                 <% } %>
         <div class = "loginbutton loginbutton-github">
+            <a id = "github" href = "/auth/github"><img src = "/public/images/github.png" class = "logo"></a>
             <p id = "github-text">Sign in with Github</p>
-            <img src = "/public/images/github.png" class = "logo"><a id = "github" href = "/auth/github"></a>
         </div>
     </div>
     <div class = "profile google-profile">
@@ -26,8 +26,8 @@
                 <p><span class = "profile-heading">Google Username:</span> <%= user.google.username %></p>
                 <% } %>
         <div class = "loginbutton loginbutton-google">
+            <a id = "google" href = "/auth/google"><img src = "/public/images/google.png" class = "logo"></a>
             <p id = "google-text">Sign in with Google</p>
-            <img src = "/public/images/google.png" class = "logo"><a id = "google" href = "/auth/google"></a>
         </div>
     </div>
     <div class = "profile twitter-profile">
@@ -36,8 +36,8 @@
                 <p><span class = "profile-heading">Twitter Username:</span> <%= user.twitter.username %></p>
                 <% } %>
         <div class = "loginbutton loginbutton-twitter">
-            <p id = "twitter-text">Sign in with Twitter</p>
-            <a id = "twitter" href = "/auth/twitter"><img src = "/public/images/twitter.png" class = "logo"></a>
+           <a id = "twitter" href = "/auth/twitter"><img src = "/public/images/twitter.png" class = "logo"></a>
+           <p id = "twitter-text">Sign in with Twitter</p>
         </div>
     </div>
     <div class = "profile facebook-profile">
@@ -46,8 +46,8 @@
                 <p><span class = "profile-heading">Facebook Username:</span> <%= user.facebook.username %></p>
                 <% } %>
         <div class = "loginbutton loginbutton-facebook">
-            <p id = "facebook-text">Sign in with Facebook</p>
             <a id ="facebook" href = "/auth/facebook"><img src = "/public/images/facebook.png" class = "logo"></a>
+            <p id = "facebook-text">Sign in with Facebook</p>
         </div>
     </div>
     </div>

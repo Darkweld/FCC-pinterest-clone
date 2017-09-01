@@ -7,6 +7,9 @@ var buttonContainer = document.getElementById('buttonContainer');
 
 
 function createImages(array){
+
+	return new Promise(function(resolve, reject) {
+
 	var fragment = new DocumentFragment();
 
 	while (imageContainer.hasChildNodes()){
@@ -85,14 +88,20 @@ function createImages(array){
 		fragment.appendChild(imageDiv);
 	}
 
-	return fragment;
+	resolve(fragment);
+});
+
 };
 
 function get(urlAffix){
 xhttp.request('GET', mainUrl + urlAffix, function(data){
 		var data = JSON.parse(data);
-		if (data.error) alert(data.error);
-		imageContainer.appendChild(createImages(data));
+		if (data.error) return alert(data.error);
+		createImages(data).then(function(newData) {
+			imageContainer.appendChild(newData);
+		}).catch(function(reject){
+			alert(reject);
+		});
 	});
 };
 function usernameAppend(value) {
@@ -113,6 +122,7 @@ function usernameAppend(value) {
 
 					var backButton = document.createElement('button');
 					backButton.textContent = "Show all images";
+					backButton.className = "button";
 					backButton.addEventListener('click', function(e){
 					while (buttonContainer.hasChildNodes()) {
 						buttonContainer.removeChild(buttonContainer.lastChild);
@@ -125,71 +135,68 @@ function usernameAppend(value) {
 
 function singleImage(target) {
 
-	xhttp.request('GET', mainUrl + '/indexImages/' + target, function(data){
-		var data = JSON.parse(data);
-		var thisChild;
-		if (data.error) {
-			var p = document.createElement('p');
-			p.textContent = data.error;
-			p.className = 'absoluteErrorText';
-			imageContainer.appendChild(p);
-		} else {
-		imageContainer.appendChild(createImages(data));
-		thisChild = imageContainer.children[0];
-		var bigDiv = document.createElement('div');
-		bigDiv.className = 'bigDiv';
-		thisChild.className = "bigProfileDiv";
-		bigDiv.appendChild(thisChild);
+	var children = imageContainer.childNodes;
 
-			var shareLinksDiv = document.createElement('div');
-			shareLinksDiv.className = "shareLinksDiv";
+	var num;
 
-			var inputLabel = document.createElement('p');
-			inputLabel.textContent = "Link to share image with friends!";
-			shareLinksDiv.appendChild(inputLabel);
-
-			var shareLinksInput = document.createElement('input');
-			shareLinksInput.className = 'profileInput';
-
-			var actualLink = document.createElement('a');
-			actualLink.textContent = 'Link';
-			actualLink.className = 'profileLink';
-			actualLink.href = shareLinksInput.value = mainUrl + '/#' + thisChild.id;
-
-			shareLinksDiv.appendChild(shareLinksInput);
-			shareLinksDiv.appendChild(actualLink);
-
-			bigDiv.appendChild(shareLinksDiv);
-			imageContainer.appendChild(bigDiv);
+	for (var i = 0, l = children.length; i < l; i++){
+		if (children[i] === target) {
+			num = i;
+			break;
 		}
-
-		var backButton = document.createElement('button');
-
-	if (document.getElementById('Username')) {
-		var val = document.getElementById('Username').firstChild.textContent;
-		buttonContainer.removeChild(document.getElementById('Username'));
-		backButton.textContent = "Back to " + val + "'s images";
-		backButton.addEventListener('click',function(ev){
-			usernameAppend(val);
-		}, false);
-	} else {
-		backButton.textContent = 'Show all images';
-		backButton.addEventListener('click', function(ev){
-		get('/indexImages');
-		buttonContainer.removeChild(backButton);
-		}, false);
 	}
 
-	buttonContainer.appendChild(backButton);
-	});
 
-};
+	target.className = 'bigProfileDiv';
+	var dimmer = document.createElement('div');
+	dimmer.className = 'dimmer';
+	imageContainer.appendChild(dimmer);
+
+	var bigDivHolder = document.createElement('div');
+	bigDivHolder.className = 'bigDivHolder';
+	bigDivHolder.appendChild(target);
+
+	var shareLinksDiv = document.createElement('div');
+	shareLinksDiv.className = "shareLinksDiv";
+
+	var inputLabel = document.createElement('p');
+	inputLabel.textContent = "Link to share image with friends!";
+	shareLinksDiv.appendChild(inputLabel);
+
+	var shareLinksInput = document.createElement('input');
+	shareLinksInput.className = 'profileInput';
+
+	var actualLink = document.createElement('a');
+	actualLink.textContent = 'Link';
+	actualLink.className = 'profileLink';
+	actualLink.href = shareLinksInput.value = mainUrl + '/#' + target.id;
+
+	shareLinksDiv.appendChild(shareLinksInput);
+	shareLinksDiv.appendChild(actualLink);
+
+	bigDivHolder.appendChild(shareLinksDiv);
+	imageContainer.appendChild(bigDivHolder);
+
+	function addClick(event){
+
+		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
+			imageContainer.removeChild(dimmer);
+			target.className = "imageDiv";
+			imageContainer.insertBefore(target, imageContainer.children[num]);
+			imageContainer.removeChild(bigDivHolder);
+			document.removeEventListener('click', addClick);
+		}
+	}
+	document.addEventListener('click', addClick);
+}
+
+
 	
 	imageContainer.addEventListener('click', function(event){
 		switch(event.target.className){
 			case "imageDiv":
-
-			singleImage(event.target.id)
+			event.stopPropagation();
+			singleImage(event.target)
 			break;
 			case "likesDiv":
 				xhttp.request('POST', mainUrl + '/like/' + event.target.parentNode.parentNode.id, function(likeData){
@@ -221,16 +228,25 @@ function singleImage(target) {
 
 function ready(event){
 	document.removeEventListener('DOMContentLoaded', ready);
-	if (window.location.hash) {
-		var image = window.location.hash.slice(1, window.location.hash.length)
-		singleImage(image);
-		return window.location.hash = "";
+	if (!window.location.hash.length) {
+		return get('/indexImages');
 	}
-	get('/indexImages');
+	xhttp.request('GET', mainUrl + '/indexImages', function(data){
+		var data = JSON.parse(data);
+		if (data.error) return alert(data.error);
+		createImages(data).then(function(newData) {
+			imageContainer.appendChild(newData);
+			var image = window.location.hash.slice(1, window.location.hash.length);
+			singleImage(document.getElementById(image));
+		}).catch(function(reject){
+			alert(reject);
+		});
+	});
+
+
 };
 
 document.addEventListener('DOMContentLoaded', ready);
-
 
 
 })();

@@ -107,4 +107,7 @@ module.exports = function(app, passport) {
 
     app.route(['/getUsernameImages/', '/getUsernameImages/:user'])
     	.get(server.getUsernameImages);
+
+    app.route('/deleteImage/:image')
+    	.delete(userLoggedInAPI, server.deleteImage);
 };
