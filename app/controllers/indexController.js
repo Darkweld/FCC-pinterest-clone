@@ -12,10 +12,6 @@ function createImages(array){
 
 	var fragment = new DocumentFragment();
 
-	while (imageContainer.hasChildNodes()){
-		imageContainer.removeChild(imageContainer.firstChild);
-	}
-
 	for (var i = 0, l = array.length - 1; l >= i; l--){
 
 		var imageDiv = document.createElement('div');
@@ -37,7 +33,7 @@ function createImages(array){
 		reshareTop.appendChild(shares.cloneNode());
 
 		var newUsername = username.cloneNode();
-		newUsername.textContent = array[l].originalUsername;
+		newUsername.textContent = "by " + array[l].originalUsername;
 		reshareTop.appendChild(newUsername);
 		imageDiv.appendChild(reshareTop);
 		}
@@ -93,16 +89,29 @@ function createImages(array){
 
 };
 
-function get(urlAffix){
+function get(urlAffix, hash){
 xhttp.request('GET', mainUrl + urlAffix, function(data){
 		var data = JSON.parse(data);
 		if (data.error) return alert(data.error);
+	
 		createImages(data).then(function(newData) {
+			while (imageContainer.hasChildNodes()){
+		imageContainer.removeChild(imageContainer.firstChild);
+		}
 			imageContainer.appendChild(newData);
+
+			if (hash) {
+				if (document.getElementById(hash)) {
+					singleImage(document.getElementById(hash));
+					return window.location.hash = "";
+				}
+				return alert('Invalid image URL');
+			}
 		}).catch(function(reject){
 			alert(reject);
 		});
 	});
+
 };
 function usernameAppend(value) {
 	get('/getUsernameImages/' + value);
@@ -193,6 +202,7 @@ function singleImage(target) {
 
 	
 	imageContainer.addEventListener('click', function(event){
+		console.log(event.target.parentNode.parentNode.className);
 		switch(event.target.className){
 			case "imageDiv":
 			event.stopPropagation();
@@ -210,11 +220,13 @@ function singleImage(target) {
 			xhttp.request('POST', mainUrl + '/share/' + event.target.parentNode.parentNode.id, function(shareData){
 				var shareData = JSON.parse(shareData);
 				if (shareData.error) return alert(shareData.error);
-				singleImage(shareData.newid);
+				if (event.target.parentNode.parentNode.className === "bigProfileDiv") document.body.click();
+				get('/indexImages', shareData.newId);
 				});
 				break;
 
 			case "username":
+			if (event.target.parentNode.parentNode.className === "bigProfileDiv") document.body.click();
 			usernameAppend(event.target.textContent);
 			break;
 		}
@@ -222,31 +234,13 @@ function singleImage(target) {
 	}, false)
 
 
-
-
-
-
-function ready(event){
-	document.removeEventListener('DOMContentLoaded', ready);
-	if (!window.location.hash.length) {
-		return get('/indexImages');
-	}
-	xhttp.request('GET', mainUrl + '/indexImages', function(data){
-		var data = JSON.parse(data);
-		if (data.error) return alert(data.error);
-		createImages(data).then(function(newData) {
-			imageContainer.appendChild(newData);
+	document.addEventListener('DOMContentLoaded', function (event){
+		if (window.location.hash.length) {
 			var image = window.location.hash.slice(1, window.location.hash.length);
-			singleImage(document.getElementById(image));
-		}).catch(function(reject){
-			alert(reject);
-		});
+			return get('/indexImages', image);
+		}
+		get('/indexImages');
 	});
-
-
-};
-
-document.addEventListener('DOMContentLoaded', ready);
 
 
 })();

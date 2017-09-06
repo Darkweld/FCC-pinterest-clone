@@ -4,21 +4,12 @@ body {
 p {
  font-size: 3vh;
 }
-.login-container {
-    width: 30%;
-    margin: 10% auto 10% auto;
-    background-color: dimgray;
-    border-radius: 10vh;
-    padding: 1vh;
-}
 .loginbutton {
     margin: 1vh auto 1vh auto;
     width: 90%;
     height: 10vh;
     border-radius: 5vh;
     display: flex;
-    flex-flow: row;
-    flex-wrap: nowrap;
     align-items: center;
 }
 .loginbutton-github {
@@ -56,16 +47,14 @@ p {
     height: 100%;
     z-index: 1;
     border-radius: 5vh;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
 }
 .loginbutton p {
-    position: absolute;
     color: white;
-    display: inline-block;
-    text-align: center;
-    left: 0;
-    right: 0;
-    font-size: 5vh;
+    font-size: 3vh;
+    margin: 0 auto 0 auto;
 }
 .link-container {
     text-align: center;
@@ -94,17 +83,13 @@ p {
     padding: 1vh;
     border-radius: 1vh;
 }
-
-
-
-
-
 .profile p {
     text-align: center;
 }
-.profile-container {
+.profile-container, .login-container {
     width: 30%;
-    margin: 5% auto 0 auto;
+    min-width: 150px;
+    margin: 15% auto 0 auto;
     background-color: dimgray;
     border-radius: 10vh;
     padding: 1vh;
@@ -338,4 +323,13 @@ p {
     flex-wrap: nowrap;
     width: 45%;
     margin-left: 5vh;
+}
+.username-container {
+    margin: 15% auto 0 auto;
+    text-align: center;
+}
+input[type=text] {
+    font-size: 3vh;
+    height: 5vh;
+    width: 20vw;
 }

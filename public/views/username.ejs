@@ -11,8 +11,7 @@
       <% if (user.localUsername) { %>
       <a href = "/">Home</a>
       <a href = "/profile">Profile</a>
-      <a href = "/findbooks">Find Books</a>
-      <a href = "/myRequests">Requests<% if (user.requestsRecieved.length) { %> <span class = "requestNotification"><%=user.requestsRecieved.length%></span><% } %></a>
+      <a href = "/upload">Upload Images</a>
       <a href = "/logout">Logout</a>
     <% } else { %>
       <a href = "/">Home</a>
@@ -22,7 +21,7 @@
 
     <div class = "username-container" id = 'userNameContainer'>
     <% if (user.localUsername) { %>
-    <p class = 'boldText' id = "yourUsername"> Your current book-club username is: <%= user.localUsername %> </p>
+    <p class = 'boldText' id = "yourUsername"> Your current pinterest-clone username is: <%= user.localUsername %> </p>
     <% } %>
     <form id = "Username" action = "">
       <p class = "boldTextColor">You must select a username to trade books.<br>

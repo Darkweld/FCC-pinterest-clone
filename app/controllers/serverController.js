@@ -344,9 +344,9 @@ function server(passport) {
                 if (doc.images.length >= 10) return res.json({
                     'error': 'You have too many images. (Limit: 10)'
                 });
-                //if (doc.images.indexOf(req.params.image) !== -1) return res.json({
-                  //  'error': 'You cannot reshare your own image!'
-              //  });
+              //  if (doc.images.indexOf(req.params.image) !== -1) return res.json({
+                //    'error': 'You cannot reshare your own image!'
+             //   });
                 if (doc.reshares.indexOf(req.params.image) !== -1) return res.json({
                     'error': 'You have already reshared that image!'
                 });
@@ -401,7 +401,7 @@ function server(passport) {
                                                 })
                                                 .exec(function(err) {
                                                     if (err) throw err;
-                                                    return res.json({'newid': resharedImage._id});
+                                                    return res.json({'newId': resharedImage._id});
                                                 });
 
                                         }).catch(function(reason) {
@@ -499,23 +499,81 @@ function server(passport) {
 
     this.deleteImage = function(req, res){
 
+    	function deleteFiles(array, callback){
+    		if (array.length === 0) return callback();
+    		var pop = array.pop();
+    		fs.unlink(pop, function(err){
+    			if (err)  {
+    				callback(err);
+    			} else {
+    			 deleteFiles(array, callback);
+    			}
+    		});
+
+    	};
+
     	Images
     		.findOne({'_id': req.params.image})
     		.then(function(image){
     			if (!image) return res.json ({error: 'Image not found. May have alredy been deleted.'})
+    				if (!image.original) {
+    					Images.find({'original': image._id}, {'_id': 1, 'localImagePath': 1})
+    					.then(function(shared){
+    						var idArr = [];
+    						var unlinkArr = [];
+
+    						for (var i = 0, l = shared.length; i < l; i++){
+    							idArr[i] = shared[i]._id;
+    							unlinkArr[i] = shared[i].localImagePath;
+    						}
+
+    						unlinkArr.push(image.localImagePath);
+
+    						User
+    						.updateMany({'images': {$in: idArr}}, {$pull: {'images': {$in: idArr}, 'reshares': image._id}})
+    						.then(function(){
+    							User
+    							.update({'_id': req.user._id}, {$pull: {'images': image._id}})
+    							.then(function() {
+    								Images
+    									.deleteMany({'original': image._id})
+    									.then(function() {
+    										Images
+    											.remove({'_id': image._id}, function(err){
+    											if (err) return res.json({error: 'Error in removing image'});
+    											res.status(200).json({'completed': ""});
+    											
+    											deleteFiles(unlinkArr, function(err){
+    												if (err) return console.error(err);
+    												console.log("Images Deleted.");
+    											});
+
+    										});
+
+    									})
+    								})
+    						})
+    					}).catch(function(reason){
+    					return res.json({error: 'Error in deleting image, reason: ' + reason});
+    				});
+    				} else {
     			User
-    			.update({'_id': req.user._id}, {$pull: {'images': image._id}})
+    			.update({'_id': req.user._id}, {$pull: {'images': image._id, 'reshares': image.original}})
     			.then(function(){
     				Images
     					.remove({'_id': image._id}, function(err){
     						if (err) return res.json({error: 'Error in removing image'});
-    						res.json({'completed': ""})
-    					})
-    			}).catch(function(reason){
-    			return res.json({error: 'Error in removing image from user.'});
-    			});
+    						res.status(200).json({'completed': ""});
+    						fs.unlink(image.localImagePath, function(err){
+    							if (err) console.log('error in fs.unlink');
+    							});
+    						});
+    					}).catch(function(reason){
+    						return res.json({error: 'Error in deleting image, reason: ' + reason});
+    					});
+    				}
     		}).catch(function(reason){
-    			return res.json({error: 'Error in finding image.'});
+    			return res.json({error: 'Error in deleting image, reason: ' + reason});
     		});
     }
 

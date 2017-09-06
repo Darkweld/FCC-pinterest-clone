@@ -69,10 +69,21 @@ function click(target) {
 		xhttp.request('DELETE', mainUrl + '/deleteImage/' + target.id, function(d) {
 			var d = JSON.parse(d);
 			if (d.error) alert (d.error);
-			profileImageContainer.removeChild(dimmer);
-			profileImageContainer.removeChild(bigDivHolder);
-			profileImageContainer.scrollIntoView();
+			xhttp.request('GET', mainUrl + '/getUser', function(arr){
+			var arr = JSON.parse(arr);
+			while (profileImageContainer.hasChildNodes()){
+				profileImageContainer.removeChild(profileImageContainer.firstChild);
+			}
 			document.removeEventListener('click', addClick);
+			if (arr.images.length) {
+			 createImages(arr.images);
+			 return window.scroll(0, document.body.scrollHeight);
+			}
+			main.removeChild(document.getElementById('pagination'));
+			window.scroll(0, document.body.scrollHeight);
+			return profileImageText.textContent = "You do not have any images";
+			});
+
 		});
 	}, false);
 	deleteDiv.appendChild(deleteButton);
@@ -91,7 +102,7 @@ function click(target) {
 			target.className = "profileImageDiv";
 			profileImageContainer.insertBefore(target, profileImageContainer.children[num]);
 			profileImageContainer.removeChild(bigDivHolder);
-			profileImageContainer.scrollIntoView();
+			window.scroll(0, profileImageContainer.scrollHeight);
 			document.removeEventListener('click', addClick);
 		}
 	}
@@ -101,8 +112,9 @@ function click(target) {
 
 
 
-function createImages(array){
+function createImages(array, page){
 	var fragment = new DocumentFragment();
+	if (document.getElementById('pagination')) main.removeChild(document.getElementById('pagination'));
 	var pagination = document.createElement('div');
 	pagination.className = "pagination";
 	pagination.id = 'pagination';
@@ -201,7 +213,6 @@ function createImages(array){
 					}
 					link.classList.add('paginationLinkActive');
 					main.appendChild(div);
-					window.scrollTo(0,document.body.scrollHeight);
 				}, false);
 			})(link, profileImageContainer)
 			pagination.appendChild(link);
@@ -210,6 +221,7 @@ function createImages(array){
 
 	}
 	main.appendChild(pagination);
+	pagination.children[0].click();
 }
 
 
