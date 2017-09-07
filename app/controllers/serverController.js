@@ -117,24 +117,26 @@ function server(passport) {
 
     this.uploadImage = function(req, res) {
 
-        if (req.user.images.length >= 10) return res.json({
-            'error': 'You have too many images. (Limit: 10)'
-        });
+    	function userError (message) {
+  		 res.json(message);
+  		 console.log
+  		 fs.unlink(req.file.path, function(err) {
+  		 	if (err) console.error(err);
+  		 });
+		};
 
-        if (req.body.title.length > 20 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return res.json({
-            error: 'Invalid title.'
-        });
+        if (req.user.images.length >= 10) return userError({'error': 'You have too many images. (Limit: 10)'})
+
+        if (req.body.title.length > 30 || /[\W]{2,2}|^\s|\s$/g.test(req.body.title)) return userError({'error': 'Invalid title. (max length 30 characters, no double spacing or double special characters e.g.(!@#$%))'});
 
 
         fs.readFile(req.file.path, function(err, data) {
-            if (err) throw (err);
+            if (err) return userError({'errorName': err.name, 'errorMessage': err.message});
 
             var checkBody = data.toString('hex', 0, 4);
             var imageTypes = ['ffd8ffe0', '89504e47', '47494638', 'ffd8ffdb', 'ffd8ffe1'];
 
-            if (imageTypes.indexOf(checkBody) === -1) return res.json({
-                error: 'invalid file type'
-            });
+            if (imageTypes.indexOf(checkBody) === -1) return userError({error: 'invalid file type'});
 
             var image = new Images({
                 imageTitle: req.body.title,
@@ -161,7 +163,7 @@ function server(passport) {
                     });
 
             }).catch(function(reason) {
-                res.json({
+                userError({
                     'error': 'error in saving image, reason: ' + reason
                 });
             });
@@ -213,7 +215,7 @@ function server(passport) {
 
             convert.append('uploadImage', request(req.body.uploadHotlink));
             convert.submit('http://localhost:3000/uploadImage', function(err, result) {
-                if (err) throw err;
+                if (err) console.error(error);
                 var obj = '';
                 result.on('data', function(data) {
                     obj += data;
@@ -238,7 +240,7 @@ function server(passport) {
                                 }
                             })
                             .exec(function(err) {
-                                if (err) throw err;
+                                if (err) console.error(err);
                                 return res.json({
                                     title: doc.imageTitle,
                                     localImagePath: doc.localImagePath
@@ -344,9 +346,9 @@ function server(passport) {
                 if (doc.images.length >= 10) return res.json({
                     'error': 'You have too many images. (Limit: 10)'
                 });
-              //  if (doc.images.indexOf(req.params.image) !== -1) return res.json({
-                //    'error': 'You cannot reshare your own image!'
-             //   });
+                if (doc.images.indexOf(req.params.image) !== -1) return res.json({
+                    'error': 'You cannot reshare your own image!'
+                });
                 if (doc.reshares.indexOf(req.params.image) !== -1) return res.json({
                     'error': 'You have already reshared that image!'
                 });
@@ -360,13 +362,7 @@ function server(passport) {
                             'error': 'You have already reshared that image!'
                         });
                         Images
-                            .update({
-                                '_id': image._id
-                            }, {
-                                $inc: {
-                                    'shares': 1
-                                }
-                            })
+                            .update({'_id': image._id}, {$inc: {'shares': 1}, $push: {'sharedBy': doc._id}})
                             .then(function() {
                                 var formdata = new FormData();
                                 formdata.append('uploadImage', fs.createReadStream(image.localImagePath));
@@ -386,7 +382,7 @@ function server(passport) {
                                             shares: 0,
                                             original: image.original || image._id,
                                             originalUsername: image.creator.localUsername,
-                                            creator: req.user._id
+                                            creator: doc._id
                                         });
 
                                         newImage.save().then(function(resharedImage) {
@@ -576,6 +572,27 @@ function server(passport) {
     			return res.json({error: 'Error in deleting image, reason: ' + reason});
     		});
     }
+
+    this.recentLikes = function(req, res) {
+    	Images
+    		.findOne({'_id': req.params.image})
+    		.populate('likes', 'localUsername')
+    		.exec(function(err, doc){
+    			if (err) console.error(err) 
+    				res.json({'likes': doc.likes})
+    		});
+    }
+
+    this.recentShares = function(req, res) {
+    	Images
+    		.findOne({'_id': req.params.image})
+    		.populate('shares' , 'localUsername')
+    		.exec(function(err, doc){
+    			if (err) console.error(err) 
+    				res.json({'shares': doc.shares})
+    		});
+    }
+
 
 }
 module.exports = server;

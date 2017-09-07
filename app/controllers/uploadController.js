@@ -22,8 +22,8 @@ preview.addEventListener('error', function(event){
 
 
 clearButton.addEventListener('click',function(event){
-	uploadLocal.value = uploadHotlink.value = "";
-	preview.src = '/public/images/error.png';
+	uploadHotlink.value = uploadLocal.value = title.value = "";
+	preview.src = '/public/images/placeholder.png';
 }, false);
 
 uploadLocal.addEventListener('input', function(event){
@@ -33,6 +33,24 @@ uploadLocal.addEventListener('input', function(event){
 uploadHotlink.addEventListener('input', function(event){
 		 return preview.src = uploadHotlink.value;
 }, false);
+
+function fadeOut(offset, target){
+		target.style.opacity = 1;
+		function opacity(t) {
+			if (t.style.opacity > 0) {
+				setTimeout(function() {
+					t.style.opacity -= .025;
+					opacity(t);
+				}, 100);
+			} else {
+				t.textContent = "";
+			}
+		}
+		setTimeout(function() {
+			opacity(target);
+		}, offset);
+	}
+
 
 form.addEventListener('submit', function(event){
 	event.preventDefault();
@@ -51,7 +69,10 @@ form.addEventListener('submit', function(event){
 	xhttp.upload('POST', url, formdata, function(data){
 		var data = JSON.parse(data);
 		if (data.error) return alert(data.error);
+		document.getElementById('noPacity').textContent = "Image Uploaded!";
+		fadeOut(1000, document.getElementById('noPacity'));
 		uploadHotlink.value = uploadLocal.value = title.value = "";
+		preview.src = '/public/images/placeholder.png';
 		console.log(data);
 	});
 

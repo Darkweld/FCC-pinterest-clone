@@ -4,8 +4,9 @@
 (function() {
     var profileImageText = document.getElementById('profileImageText');
     var main = document.getElementById('imageContainer');
-	function profilePage(data) {
+    var recent = document.getElementById('Recent');
 
+	function profilePage(data) {
 
         for (var i in data.tokens) {
             var capital = i.substr(0,1).toUpperCase() + i.substr(1, i.length);
@@ -77,7 +78,6 @@ function click(target) {
 			document.removeEventListener('click', addClick);
 			if (arr.images.length) {
 			 createImages(arr.images);
-			 return window.scroll(0, document.body.scrollHeight);
 			}
 			main.removeChild(document.getElementById('pagination'));
 			window.scroll(0, document.body.scrollHeight);
@@ -93,23 +93,65 @@ function click(target) {
 
 	bigDivHolder.appendChild(dividerColumn);
 	profileImageContainer.appendChild(bigDivHolder);
+
 	window.scroll(0,0);
 
 	function addClick(event){
+		if (event.target.className === 'likesDiv') {
+			xhttp.request('GET', mainUrl + '/recentLikes/' + target.id, function (likeData) {
+				var likeData = JSON.parse(likeData);
+				if (likeData.error) alert(likeData.error);
+
+				if (recent)	bigDivHolder.removeChild(recent);
+
+				var recentDiv = document.createElement('div');
+				recentDiv.className = "recentContainer";
+				recentDiv.id = 'Recent';
+
+				for (var i = 0, l = likeData.likes.length; i < l; i++) {
+					var statusDiv = document.createElement('div');
+					statusDiv.className = "statusDiv";
+
+					var statusText = document.createElement('p');
+					statusText.textContent = likeData.likes[i].localUsername;
+					statusDiv.appendChild(statusText);
+
+					var likes = document.createElement('img');
+					likes.src = "/public/images/likes.png";
+					likes.className = "likes";
+					statusDiv.appendChild(likes);
+
+					var finishingText = document.createElement('p');
+					finishingText.textContent = "ed this";
+					statusDiv.appendChild(finishingText);
+
+					recentDiv.appendChild(statusDiv);
+				}
+
+				dividerColumn.appendChild(recentDiv);
+
+			});
+		}
+
+		if (event.target.className === 'sharesDiv') {
+			xhttp.request('GET', mainUrl + '/recentShares/' + target.id, function (shareData) {
+				var shareData = JSON.parse(shareData);
+				if (recent)	bigDivHolder.removeChild(recent);
+
+			})
+		}
 
 		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
 			profileImageContainer.removeChild(dimmer);
 			target.className = "profileImageDiv";
 			profileImageContainer.insertBefore(target, profileImageContainer.children[num]);
 			profileImageContainer.removeChild(bigDivHolder);
-			window.scroll(0, profileImageContainer.scrollHeight);
 			document.removeEventListener('click', addClick);
 		}
 	}
 	document.addEventListener('click', addClick);
 
 }
-
 
 
 function createImages(array, page){
@@ -156,7 +198,7 @@ function createImages(array, page){
 
 		var title = document.createElement('p');
 		title.textContent = array[i].imageTitle;
-		title.className = "imageTitle";
+		(array[i].imageTitle.length > 15) ? title.className = "imageTitle" : title.className = "smallImageTitle";
 		imageDiv.appendChild(title);
 
 		var likesDiv = document.createElement('div');
@@ -199,9 +241,16 @@ function createImages(array, page){
 			profileImageContainer.id = "profileImageContainer";
 			profileImageContainer.appendChild(fragment);
 			profileImageContainer.addEventListener('click',function (ev){
-				if (ev.target.className === "profileImageDiv") {
-						ev.stopPropagation();
+				switch(ev.target.className) {
+					case 'profileImageDiv':
+					ev.stopPropagation();
 						click(ev.target);
+						break;
+					case 'likesDiv':
+					case 'sharesDiv':
+					if (ev.target.parentNode.parentNode.className === 'bigProfileDiv') document.body.click();
+						click(ev.target.parentNode.parentNode);
+					break;
 					}
 				}, false);
 			(function(link, div){
@@ -225,40 +274,12 @@ function createImages(array, page){
 }
 
 
-
-
-
 	var recieveprofileUrl = mainUrl + "/getUser";
 	xhttp.request("GET", recieveprofileUrl, function(data){
 			var data = JSON.parse(data);
 			profilePage(data);
 			if (data.images.length) return createImages(data.images);
 			return profileImageText.textContent = "You do not have any images";
-	});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	});   
     
 })();

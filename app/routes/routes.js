@@ -110,4 +110,10 @@ module.exports = function(app, passport) {
 
     app.route('/deleteImage/:image')
     	.delete(userLoggedInAPI, server.deleteImage);
+
+    app.route('/recentLikes/:image')
+    	.get(server.recentLikes);
+
+    app.route('/recentShares/:image')
+    	.get(server.recentLikes);
 };

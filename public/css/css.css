@@ -125,6 +125,7 @@ p {
 .boldText {
     font-weight: 700;
     font-size: 5vh;
+    margin: 2.5% auto 2.5% auto;
 }
 .absoluteErrorText {
     position: absolute;;
@@ -137,8 +138,9 @@ p {
 }
 
 .preview {
-    width: 200px;
-    height: 200px;
+    width: 20%;
+    height: auto;
+    border-radius: 10vh;
 }
 .uploadPageContainer {
     width: 80%;
@@ -175,7 +177,10 @@ p {
 .indexContainer {
     text-align: center;
     width: 95%;
-    margin: 10px auto 10px auto;
+    margin: 5vh auto 5vh auto;
+}
+.buttonContainer {
+    margin: 2.5% auto 2.5% auto;
 }
 .image {
     width: 100%;
@@ -185,6 +190,15 @@ p {
     height: 5vh;
     width: 5vh;
     display: block;
+}
+.imageTitle, .smallImageTitle {
+    text-align: left;
+    margin: 2.5% 0 2.5% 0;
+    padding: 0 5% 0 5%;
+    word-wrap:break-word;
+}
+.smallImageTitle {
+    text-align: center;
 }
 .separator {
     display: flex;
@@ -244,7 +258,7 @@ p {
     margin: 1vh;
 }
 .bigDivHolder {
-    position: fixed;
+    position: absolute;
     width: 50%;
     z-index: 4;
     display: flex;
@@ -254,7 +268,7 @@ p {
     align-items: flex-start;
     left: 0;
     right: 0;
-    top: 10%;
+    top: 15%;
     margin: 0 auto 0 auto;
 }
 .bigProfileDiv {
@@ -262,6 +276,9 @@ p {
     overflow: hidden;
     background-color: white;
     width: 50%;
+}
+.bigProfileDiv .imageTitle{
+    word-wrap: break-word;
 }
 .shareLinksDiv {
     width: 45%;
@@ -332,4 +349,24 @@ input[type=text] {
     font-size: 3vh;
     height: 5vh;
     width: 20vw;
+}
+.noPacity {
+    height: 3vh;
+    margin: 0;
+    color: #4dff4d;
+    font-weight: 600;
+}
+.statusDiv {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 5vh;
+    margin-top: 1vh;
+}
+.recentContainer {
+    padding: 1vh;
+    width: 100%;
 }

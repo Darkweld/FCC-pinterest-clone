@@ -4,7 +4,7 @@
 var imageContainer = document.getElementById('Pictures');
 var indexContainer = document.getElementById('indexContainer');
 var buttonContainer = document.getElementById('buttonContainer');
-
+var imageLabel = document.getElementById('imageLabel');
 
 function createImages(array){
 
@@ -33,7 +33,7 @@ function createImages(array){
 		reshareTop.appendChild(shares.cloneNode());
 
 		var newUsername = username.cloneNode();
-		newUsername.textContent = "by " + array[l].originalUsername;
+		newUsername.textContent = array[l].originalUsername;
 		reshareTop.appendChild(newUsername);
 		imageDiv.appendChild(reshareTop);
 		}
@@ -48,7 +48,7 @@ function createImages(array){
 
 		var title = document.createElement('p');
 		title.textContent = array[l].imageTitle;
-		title.className = "imageTitle";
+		(array[l].imageTitle.length > 15) ? title.className = "imageTitle" : title.className = "smallImageTitle";
 		imageDiv.appendChild(title);
 
 		var likesDiv = document.createElement('div');
@@ -116,30 +116,22 @@ xhttp.request('GET', mainUrl + urlAffix, function(data){
 function usernameAppend(value) {
 	get('/getUsernameImages/' + value);
 
-					while(buttonContainer.hasChildNodes()) {
-						buttonContainer.removeChild(buttonContainer.lastChild);
-					}
+	imageLabel.textContent = value + "'s images";
 
-					var usernameText = document.createElement('p');
-					usernameText.textContent = value;
-					usernameText.id = "Username";
-					buttonContainer.appendChild(usernameText);
+	while (buttonContainer.hasChildNodes()) {
+		buttonContainer.removeChild(buttonContainer.firstChild);
+	}
 
-					var span = document.createElement('span');
-					span.textContent = "'s images";
-					usernameText.appendChild(span);
+	var backButton = document.createElement('button');
+	backButton.textContent = "Show all images";
+	backButton.className = "button";
+	backButton.addEventListener('click', function(e){
+	buttonContainer.removeChild(backButton);
+	get('/indexImages');
+	imageLabel.textContent = "All images";
+	}, false)
 
-					var backButton = document.createElement('button');
-					backButton.textContent = "Show all images";
-					backButton.className = "button";
-					backButton.addEventListener('click', function(e){
-					while (buttonContainer.hasChildNodes()) {
-						buttonContainer.removeChild(buttonContainer.lastChild);
-					}
-					get('/indexImages');
-					}, false)
-
-					buttonContainer.appendChild(backButton);
+	buttonContainer.appendChild(backButton);
 }
 
 function singleImage(target) {
@@ -186,6 +178,8 @@ function singleImage(target) {
 	bigDivHolder.appendChild(shareLinksDiv);
 	imageContainer.appendChild(bigDivHolder);
 
+	window.scroll(0,0);
+
 	function addClick(event){
 
 		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
@@ -202,7 +196,7 @@ function singleImage(target) {
 
 	
 	imageContainer.addEventListener('click', function(event){
-		console.log(event.target.parentNode.parentNode.className);
+		console.log(event.target.parentNode.className);
 		switch(event.target.className){
 			case "imageDiv":
 			event.stopPropagation();
@@ -226,15 +220,38 @@ function singleImage(target) {
 				break;
 
 			case "username":
-			if (event.target.parentNode.parentNode.className === "bigProfileDiv") document.body.click();
+			if (event.target.parentNode.className === "bigProfileDiv") document.body.click();
 			usernameAppend(event.target.textContent);
 			break;
 		}
 
 	}, false)
 
+	function fadeOut(offset, target){
+		target.style.opacity = 1;
+		function opacity(t) {
+			if (t.style.opacity > 0) {
+				setTimeout(function() {
+					t.style.opacity -= .025;
+					opacity(t);
+				}, 100);
+			} else {
+				t.style.display = "none";
+				if (!indexContainer.style.marginTop) {
+					indexContainer.style.marginTop = "15%";
+				} else {
+					buttonContainer.style.height = "5vh";
+				}
+			}
+		}
+		setTimeout(function() {
+			opacity(target);
+		}, offset);
+	}
 
 	document.addEventListener('DOMContentLoaded', function (event){
+		fadeOut(1500, document.getElementById('indexTitle'));
+		fadeOut(4500, document.getElementById('Instructions'));
 		if (window.location.hash.length) {
 			var image = window.location.hash.slice(1, window.location.hash.length);
 			return get('/indexImages', image);
