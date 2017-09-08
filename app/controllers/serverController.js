@@ -347,10 +347,10 @@ function server(passport) {
                     'error': 'You have too many images. (Limit: 10)'
                 });
                 if (doc.images.indexOf(req.params.image) !== -1) return res.json({
-                    'error': 'You cannot reshare your own image!'
+                    'error': 'You cannot repost your own image!'
                 });
                 if (doc.reshares.indexOf(req.params.image) !== -1) return res.json({
-                    'error': 'You have already reshared that image!'
+                    'error': 'You have already have an active repost of that image!'
                 });
                 Images
                     .findOne({
@@ -586,10 +586,10 @@ function server(passport) {
     this.recentShares = function(req, res) {
     	Images
     		.findOne({'_id': req.params.image})
-    		.populate('shares' , 'localUsername')
+    		.populate('sharedBy', 'localUsername')
     		.exec(function(err, doc){
     			if (err) console.error(err) 
-    				res.json({'shares': doc.shares})
+    				res.json({'shares': doc.sharedBy})
     		});
     }
 

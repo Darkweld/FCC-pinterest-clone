@@ -1,6 +1,6 @@
 'use strict';
 
-var mainUrl = "http://localhost:3000"
+var mainUrl = "https://whispering-lowlands-73800.herokuapp.com";
 
 var xhttp = {
    ready: function ready (fn) {

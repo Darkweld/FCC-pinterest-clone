@@ -4,7 +4,6 @@
 (function() {
     var profileImageText = document.getElementById('profileImageText');
     var main = document.getElementById('imageContainer');
-    var recent = document.getElementById('Recent');
 
 	function profilePage(data) {
 
@@ -15,6 +14,77 @@
         }
          
          
+}
+
+function AddRecentDiv(type, id, nodeToAppend) {
+	var url = mainUrl;
+	var img = document.createElement('img');
+	var noRecent = document.createElement('p');
+	var prop;
+	var activityLabel = document.createElement('p');
+	activityLabel.className = "activityLabel";
+
+	if (type === 'likesDiv') {
+		url += '/recentLikes/' + id;
+		img.src = "/public/images/likes.png";
+		img.className = 'likes'
+		noRecent.textContent = "This image has no likes.";
+		prop = 'likes';
+		activityLabel.textContent = "Likes for this image";
+	} else {
+		url += '/recentShares/' + id;
+		img.src = '/public/images/shares.png';
+		img.className = 'shares';
+		noRecent.textContent = "This image has no shares.";
+		prop = 'shares';
+		activityLabel.textContent = 'Shares for this image';
+	}
+
+
+	xhttp.request('GET', url, function (d) {
+				var d = JSON.parse(d);
+				if (d.error) alert(d.error);
+
+				if (document.getElementById('Recent'))	document.getElementById('Recent').parentNode.removeChild(document.getElementById('Recent'));
+
+				var recentDiv = document.createElement('div');
+				recentDiv.className = "recentContainer";
+				recentDiv.id = 'Recent';
+				recentDiv.appendChild(activityLabel);
+
+
+				if (!d[prop].length) {
+					var statusDiv = document.createElement('div');
+					statusDiv.className = "statusDiv";
+					statusDiv.appendChild(noRecent);
+					recentDiv.appendChild(statusDiv);
+					return nodeToAppend.appendChild(recentDiv);
+				}
+
+
+				for (var i = 0, l = d[prop].length; i < l; i++) {
+					var statusDiv = document.createElement('div');
+					statusDiv.className = "statusDiv";
+
+					var statusText = document.createElement('p');
+					statusText.textContent = d[prop][i].localUsername;
+					statusText.className = "usernameStatus";
+					statusDiv.appendChild(statusText);
+
+					statusDiv.appendChild(img);
+
+					var finishingText = document.createElement('p');
+					finishingText.textContent = " ed this";
+					statusDiv.appendChild(finishingText);
+
+					recentDiv.appendChild(statusDiv);
+				}
+
+				return nodeToAppend.appendChild(recentDiv);
+
+				});
+
+
 }
 
 function click(target) {
@@ -97,49 +167,7 @@ function click(target) {
 	window.scroll(0,0);
 
 	function addClick(event){
-		if (event.target.className === 'likesDiv') {
-			xhttp.request('GET', mainUrl + '/recentLikes/' + target.id, function (likeData) {
-				var likeData = JSON.parse(likeData);
-				if (likeData.error) alert(likeData.error);
-
-				if (recent)	bigDivHolder.removeChild(recent);
-
-				var recentDiv = document.createElement('div');
-				recentDiv.className = "recentContainer";
-				recentDiv.id = 'Recent';
-
-				for (var i = 0, l = likeData.likes.length; i < l; i++) {
-					var statusDiv = document.createElement('div');
-					statusDiv.className = "statusDiv";
-
-					var statusText = document.createElement('p');
-					statusText.textContent = likeData.likes[i].localUsername;
-					statusDiv.appendChild(statusText);
-
-					var likes = document.createElement('img');
-					likes.src = "/public/images/likes.png";
-					likes.className = "likes";
-					statusDiv.appendChild(likes);
-
-					var finishingText = document.createElement('p');
-					finishingText.textContent = "ed this";
-					statusDiv.appendChild(finishingText);
-
-					recentDiv.appendChild(statusDiv);
-				}
-
-				dividerColumn.appendChild(recentDiv);
-
-			});
-		}
-
-		if (event.target.className === 'sharesDiv') {
-			xhttp.request('GET', mainUrl + '/recentShares/' + target.id, function (shareData) {
-				var shareData = JSON.parse(shareData);
-				if (recent)	bigDivHolder.removeChild(recent);
-
-			})
-		}
+		if (event.target.className === "likesDiv" || event.target.className === 'sharesDiv') return AddRecentDiv(event.target.className, target.id, dividerColumn);
 
 		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
 			profileImageContainer.removeChild(dimmer);
@@ -248,8 +276,7 @@ function createImages(array, page){
 						break;
 					case 'likesDiv':
 					case 'sharesDiv':
-					if (ev.target.parentNode.parentNode.className === 'bigProfileDiv') document.body.click();
-						click(ev.target.parentNode.parentNode);
+					if (ev.target.parentNode.parentNode.className !== 'bigProfileDiv') click(ev.target.parentNode.parentNode);
 					break;
 					}
 				}, false);

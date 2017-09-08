@@ -2,25 +2,25 @@
   <head>
     
     <link href = "public/css/css.css" type = "text/css" rel = "stylesheet">
-    
-    
+
   </head>
   
   <body>
     <div class =  "link-container">
     <% if (user) { %>
       <a href = "/profile">Profile</a>
+      <a href = "/upload">Upload Images</a>
       <a href = "/logout">Logout</a>
     <% } else { %>
       <a href = "/login">Login</a>
     <% } %>
     </div>
 
-    <h1 class = "title" id = "indexTitle">FreeCodeCamp "Pinterest clone"<br> By <a class = 'link' href ='https://github.com/Darkweld'>Darkweld</a></h1>
+    <h1 class = "title" id = "indexTitle">FreeCodeCamp "Pinterest clone" <br> <a class = 'link' href ='https://github.com/Darkweld'>Github</a> </h1>
 
     <div class = "indexContainer" id = 'indexContainer'>
     <p class = 'boldText' id = "imageLabel">All images</p>
-    <p class = "boldText" id = 'Instructions'>Instructions: Click an image to see a popout </p>
+    <p class = "boldText" id = 'Instructions'> Click an image to see a popout </p>
     <div class = "buttonContainer" id = "buttonContainer"></div>
 
     <div id = "Pictures" class = "image-container"></div>

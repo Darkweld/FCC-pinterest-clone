@@ -46,6 +46,14 @@
             <a id ="facebook" href = "/auth/facebook"><img src = "/public/images/facebook.png" class = "logo"><p id = "facebook-text">Sign in with Facebook</p></a>
         </div>
     </div>
+    <div class = "profile localUsernameProfile">
+    <%if (user.localUsername) { %>
+        <p><span class = "profile-heading">Your pinterest-clone username: </span> <%= user.localUsername %><br><a class = 'link' href = '/username'>Change username?</a></p>
+        
+        <% } else { %>
+        <p><span class = "profile-heading">You have not chosen a pinterest-clone username.</span><br> Visit <a class = 'link' href = '/username'>the username page</a> to change it</p>
+        <% } %>
+    </div>
     </div>
 
     <div class ="indexContainer" id = "imageContainer">
@@ -55,6 +63,7 @@
     
     <div class =  "link-container">
       <a href = "/">Home</a>
+      <a href = "/logout">Upload Images</a>
       <a href = "/logout">Logout</a>
     </div>
         

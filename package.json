@@ -1,14 +1,14 @@
 {
-  "name": "bookClub",
+  "name": "PintClone",
   "version": "1.0.0",
-  "description": "Manage a Book Trading Club project for FreeCodeCamp",
+  "description": "Build a Pinterest Clone project for FreeCodeCamp",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Darkweld/FCC-Book-Trading-Club.git"
+    "url": "git+https://github.com/Darkweld/FCC-pinterest-clone.git"
   },
   "keywords": [
     "freecodecamp",
@@ -17,11 +17,11 @@
   "author": "Darkweld",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Darkweld/FCC-Book-Trading-Club/issues"
+    "url": "https://github.com/Darkweld/FCC-pinterest-clone/issues"
   },
-  "homepage": "https://github.com/Darkweld/FCC-Book-Trading-Club#readme",
+  "homepage": "https://github.com/Darkweld/FCC-pinterest-clone#readme",
   "engines": {
-    "node": "^v8.3.0"
+    "node": "^v8.4.0"
   },
   "dependencies": {
     "dotenv": "^4.0.0",

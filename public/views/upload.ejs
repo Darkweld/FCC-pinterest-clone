@@ -9,6 +9,7 @@
   <body>
     <div class =  "link-container">
     <% if (user) { %>
+      <a href = "/">Home</a>
       <a href = "/profile">Profile</a>
       <a href = "/logout">Logout</a>
     <% } else { %>
@@ -34,7 +35,7 @@
       <input type = 'text' class = 'uploadFormInput' id = 'uploadHotlink'>
         </div>
       </div>
-      <p class = 'instruction'>Title of upload</p>
+      <p class = 'boldText'>Title of upload</p>
       <input type="text" id = "Title" required placeholder="Title">
       
       <input type = 'submit' value = 'Upload' id = "uploadButton" class = "button">

@@ -99,7 +99,7 @@ module.exports = function(app, passport) {
     app.route('/share/:image')
     	.post(userLoggedInAPI, server.shareThis);
 
-    app.route(['checkUsername', '/checkUsername/:username'])
+    app.route(['/checkUsername', '/checkUsername/:username'])
     	.post(server.checkUsername)
 
     app.route('/username')
@@ -115,5 +115,5 @@ module.exports = function(app, passport) {
     	.get(server.recentLikes);
 
     app.route('/recentShares/:image')
-    	.get(server.recentLikes);
+    	.get(server.recentShares);
 };

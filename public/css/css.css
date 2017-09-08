@@ -60,11 +60,11 @@ p {
     text-align: center;
     background-color: dimgray;
     position: fixed;
-    padding: 5px;
-    top:0px;
+    padding: 1%;
+    top:0;
     left: 0;
     right: 0;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 2.5% auto;
     z-index: 5;
     display: flex;
     flex-flow: row;
@@ -116,10 +116,13 @@ p {
 .link:hover {
     color:red;
 }
+.profile .link {
+    font-size: 3vh;
+}
 .bigWhiteText {
     color: white;
     font-size: 5vh;
-    margin: 10px 0 10px 0;
+    margin: 1% 0 1%0;
     font-weight: 600;
 }
 .boldText {
@@ -138,9 +141,10 @@ p {
 }
 
 .preview {
-    width: 20%;
+    width: 30%;
     height: auto;
-    border-radius: 10vh;
+    border-radius: 5vh;
+    border: .5vh solid black;
 }
 .uploadPageContainer {
     width: 80%;
@@ -153,13 +157,13 @@ p {
     align-items: center;
     flex-wrap: nowrap;
     flex-flow: row;
-    margin: 10px 0 10px 0;
+    margin: 1% 0 1% 0;
 }
-.instruction {
-    font-size: 20px;
+.instruction, .uploadFormInput {
+    font-size: 3vh;
 }
 .divider {
-    width: 300px;
+    width: 30%;
     margin: 0 auto 0 auto;
 }
 .image-container {
@@ -214,7 +218,7 @@ p {
     align-items: center;
     justify-content: center;
     width: 50%;
-    border: 1px solid black;
+    border: .5vh solid black;
 }
 .likesDiv {
     border-bottom-left-radius: 5vh;
@@ -222,7 +226,7 @@ p {
 .sharesDiv {
     border-bottom-right-radius: 5vh;
 }
-.likes, .shares, .likesText, .sharesText, .image, .title {
+.likes, .shares, .likesText, .sharesText, .image, .smallImageTitle, .imageTitle {
     pointer-events: none;
     -moz-user-select:none;
 }
@@ -231,7 +235,7 @@ p {
     flex-flow: row;
     align-items: center;
     justify-content: center;
-    border-bottom: 3px solid black;
+    border-bottom: .5vh solid black;
 }
 .username {
     margin:0;
@@ -328,18 +332,18 @@ p {
 .profileLinksDiv, .deleteLinksDiv {
     width: 100%;
     background-color: white;
-    padding: 1vh;
+    padding: 1%;
     border-radius: 5vh;
 }
 .deleteLinksDiv {
-    margin-top: 5vh;
+    margin-top: 2.5vh;
 }
 .dividerColumn {
     display: flex;
     flex-flow: column;
     flex-wrap: nowrap;
     width: 45%;
-    margin-left: 5vh;
+    margin-left: 5%;
 }
 .username-container {
     margin: 15% auto 0 auto;
@@ -349,6 +353,7 @@ input[type=text] {
     font-size: 3vh;
     height: 5vh;
     width: 20vw;
+    border: .5vh solid black;
 }
 .noPacity {
     height: 3vh;
@@ -366,7 +371,25 @@ input[type=text] {
     border-radius: 5vh;
     margin-top: 1vh;
 }
+.statusDiv:nth-child(1) {
+    margin-top: 0;
+}
 .recentContainer {
-    padding: 1vh;
+    margin-top: 2.5vh;
+    padding: 1%;
     width: 100%;
+}
+.usernameStatus {
+    margin-right: 1vh;
+    font-weight: 600;
+}
+.activityLabel {
+    margin: 0;
+    display: inline-block;
+    color: white;
+    font-weight: 700;
+    background-color: #80b3b3;
+    border-radius: 5vh;
+    text-align: center;
+    padding: 1%;
 }
