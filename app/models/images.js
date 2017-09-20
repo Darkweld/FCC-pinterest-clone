@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var Images = new Schema({
     imageTitle: String,
     localImagePath: String,
+    imageName: String,
     shares: Number,
     sharedBy: [{type: Schema.Types.ObjectId, ref: 'User'}],
     original: {type: Schema.Types.ObjectId, ref: 'Images'},
