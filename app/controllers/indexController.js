@@ -1,263 +1,242 @@
-'use strict';
+"use strict";
 
-(function(){
-var imageContainer = document.getElementById('Pictures');
-var indexContainer = document.getElementById('indexContainer');
-var buttonContainer = document.getElementById('buttonContainer');
-var imageLabel = document.getElementById('imageLabel');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function createImages(array){
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	return new Promise(function(resolve, reject) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	var fragment = new DocumentFragment();
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	for (var i = 0, l = array.length - 1; l >= i; l--){
+var React = require("react");
+var ReactDOM = require("react-dom");
+var mainUrl = "https://whispering-lowlands-73800.herokuapp.com";
 
-		var imageDiv = document.createElement('div');
-		imageDiv.className = "imageDiv";
-		imageDiv.id = array[l]._id;
+var LikeShare = function (_React$Component) {
+	_inherits(LikeShare, _React$Component);
 
+	function LikeShare() {
+		_classCallCheck(this, LikeShare);
 
-		var username = document.createElement('p');
-		username.className = 'username';
-		username.textContent = array[l].creator.localUsername;
-
-		var shares = document.createElement('img');
-		shares.src = "/public/images/shares.png";
-		shares.className = "shares";
-
-		if (array[l].original) {
-		var reshareTop = document.createElement('div');
-		reshareTop.className = "reshareDiv";
-		reshareTop.appendChild(shares.cloneNode());
-
-		var newUsername = username.cloneNode();
-		newUsername.textContent = array[l].originalUsername;
-		reshareTop.appendChild(newUsername);
-		imageDiv.appendChild(reshareTop);
-		}
-
-		imageDiv.appendChild(username);
-
-
-		var image = document.createElement('img');
-		image.className = "image";
-		image.src = array[l].localImagePath;
-		imageDiv.appendChild(image);
-
-		var title = document.createElement('p');
-		title.textContent = array[l].imageTitle;
-		(array[l].imageTitle.length > 15) ? title.className = "imageTitle" : title.className = "smallImageTitle";
-		imageDiv.appendChild(title);
-
-		var likesDiv = document.createElement('div');
-		likesDiv.className = "likesDiv";
-
-		var likes = document.createElement('img');
-		likes.src = "/public/images/likes.png";
-		likes.className = "likes";
-		likesDiv.appendChild(likes);
-
-		var likesText = document.createElement('p');
-		likesText.textContent = array[l].likes.length || 0;
-		likesText.className = "likesText";
-		likesDiv.appendChild(likesText);
-
-		var sharesDiv = document.createElement('div');
-		sharesDiv.className = "sharesDiv";
-
-		sharesDiv.appendChild(shares);
-
-		var sharesText = document.createElement('p');
-		sharesText.textContent = array[l].shares;
-		sharesText.className = 'sharesText';
-		sharesDiv.appendChild(sharesText);
-
-		var separator = document.createElement('div');
-		separator.className = 'separator';
-		separator.appendChild(likesDiv);
-		separator.appendChild(sharesDiv);
-
-		imageDiv.appendChild(separator);
-
-		fragment.appendChild(imageDiv);
+		return _possibleConstructorReturn(this, (LikeShare.__proto__ || Object.getPrototypeOf(LikeShare)).apply(this, arguments));
 	}
 
-	resolve(fragment);
-});
+	_createClass(LikeShare, [{
+		key: "render",
+		value: function render() {
+			var _this2 = this;
 
-};
+			var imageType = this.props.heart ? "likes.png" : "shares.png";
 
-function get(urlAffix, hash){
-xhttp.request('GET', mainUrl + urlAffix, function(data){
-		var data = JSON.parse(data);
-		if (data.error) return alert(data.error);
-	
-		createImages(data).then(function(newData) {
-			while (imageContainer.hasChildNodes()){
-		imageContainer.removeChild(imageContainer.firstChild);
+			return React.createElement(
+				"div",
+				{ className: "likeShare", onClick: function onClick(e) {
+						return _this2.props.clickLikeShare(e, _this2.props.clickType, _this2.props.id);
+					} },
+				React.createElement(
+					"p",
+					{ className: "likeShareText" },
+					this.props.text
+				)
+			);
 		}
-			imageContainer.appendChild(newData);
+	}]);
 
-			if (hash) {
-				if (document.getElementById(hash)) {
-					singleImage(document.getElementById(hash));
-					return window.location.hash = "";
-				}
-				return alert('Invalid image URL');
-			}
-		}).catch(function(reject){
-			alert(reject);
-		});
-	});
+	return LikeShare;
+}(React.Component);
 
-};
-function usernameAppend(value) {
-	get('/getUsernameImages/' + value);
+var ImageDiv = function (_React$Component2) {
+	_inherits(ImageDiv, _React$Component2);
 
-	imageLabel.textContent = value + "'s images";
+	function ImageDiv() {
+		_classCallCheck(this, ImageDiv);
 
-	while (buttonContainer.hasChildNodes()) {
-		buttonContainer.removeChild(buttonContainer.firstChild);
+		return _possibleConstructorReturn(this, (ImageDiv.__proto__ || Object.getPrototypeOf(ImageDiv)).apply(this, arguments));
 	}
 
-	var backButton = document.createElement('button');
-	backButton.textContent = "Show all images";
-	backButton.className = "button";
-	backButton.addEventListener('click', function(e){
-	buttonContainer.removeChild(backButton);
-	get('/indexImages');
-	imageLabel.textContent = "All images";
-	}, false)
+	_createClass(ImageDiv, [{
+		key: "render",
+		value: function render() {
+			var _this4 = this;
 
-	buttonContainer.appendChild(backButton);
-}
-
-function singleImage(target) {
-
-	var children = imageContainer.childNodes;
-
-	var num;
-
-	for (var i = 0, l = children.length; i < l; i++){
-		if (children[i] === target) {
-			num = i;
-			break;
+			return React.createElement(
+				"div",
+				{ className: this.props.big ? "bigImageDiv" : "imageDiv" },
+				React.createElement("img", { className: "image", src: this.props.imageSrc, onClick: function onClick(e) {
+						return _this4.props.click(e, false, _this4.props.id);
+					} }),
+				React.createElement(
+					"div",
+					{ className: "imageDivBottom" },
+					React.createElement(
+						"p",
+						{ className: "imageTitle" },
+						this.props.title
+					),
+					React.createElement(
+						"div",
+						{ className: "separator" },
+						React.createElement(LikeShare, { heart: true, text: this.props.likes, clickType: "like", clickLikeShare: this.props.click, id: this.props.id }),
+						React.createElement(LikeShare, { heart: false, text: this.props.shares, clickType: "share", clickLikeShare: this.props.click, id: this.props.id })
+					)
+				)
+			);
 		}
+	}]);
+
+	return ImageDiv;
+}(React.Component);
+
+var Overlay = function (_React$Component3) {
+	_inherits(Overlay, _React$Component3);
+
+	function Overlay() {
+		_classCallCheck(this, Overlay);
+
+		return _possibleConstructorReturn(this, (Overlay.__proto__ || Object.getPrototypeOf(Overlay)).apply(this, arguments));
 	}
 
+	_createClass(Overlay, [{
+		key: "render",
+		value: function render() {
 
-	target.className = 'bigProfileDiv';
-	var dimmer = document.createElement('div');
-	dimmer.className = 'dimmer';
-	imageContainer.appendChild(dimmer);
-
-	var bigDivHolder = document.createElement('div');
-	bigDivHolder.className = 'bigDivHolder';
-	bigDivHolder.appendChild(target);
-
-	var shareLinksDiv = document.createElement('div');
-	shareLinksDiv.className = "shareLinksDiv";
-
-	var inputLabel = document.createElement('p');
-	inputLabel.textContent = "Link to share image with friends!";
-	shareLinksDiv.appendChild(inputLabel);
-
-	var shareLinksInput = document.createElement('input');
-	shareLinksInput.className = 'profileInput';
-
-	var actualLink = document.createElement('a');
-	actualLink.textContent = 'Link';
-	actualLink.className = 'profileLink';
-	actualLink.href = shareLinksInput.value = mainUrl + '/#' + target.id;
-
-	shareLinksDiv.appendChild(shareLinksInput);
-	shareLinksDiv.appendChild(actualLink);
-
-	bigDivHolder.appendChild(shareLinksDiv);
-	imageContainer.appendChild(bigDivHolder);
-
-	window.scroll(0,0);
-
-	function addClick(event){
-
-		if (!bigDivHolder.contains(event.target) || target === event.target || bigDivHolder === event.target){
-			imageContainer.removeChild(dimmer);
-			target.className = "imageDiv";
-			imageContainer.insertBefore(target, imageContainer.children[num]);
-			imageContainer.removeChild(bigDivHolder);
-			document.removeEventListener('click', addClick);
+			return React.createElement(
+				"div",
+				{ "class": "dimmer" },
+				React.createElement(
+					"div",
+					{ "class": "bigDivHolder" },
+					this.props.image,
+					React.createElement(
+						"div",
+						{ "class": "shareLinksDiv" },
+						React.createElement(
+							"p",
+							null,
+							"Link to share image with friends!"
+						),
+						React.createElement(
+							"input",
+							{ "class": "profileInput" },
+							React.createElement(
+								"a",
+								{ className: "profileLink", href: this.props.link },
+								"Link"
+							)
+						)
+					)
+				)
+			);
 		}
+	}]);
+
+	return Overlay;
+}(React.Component);
+
+var Main = function (_React$Component4) {
+	_inherits(Main, _React$Component4);
+
+	function Main() {
+		_classCallCheck(this, Main);
+
+		var _this6 = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
+
+		_this6.state = { data: [], ownership: null, big: null };
+
+		_this6.setOwnership = _this6.setOwnership.bind(_this6);
+		_this6.imageClick = _this6.imageClick.bind(_this6);
+		_this6.fetchData = _this6.fetchData.bind(_this6);
+		return _this6;
 	}
-	document.addEventListener('click', addClick);
-}
 
+	_createClass(Main, [{
+		key: "componentDidMount",
+		value: function componentDidMount() {
 
-	
-	imageContainer.addEventListener('click', function(event){
-		console.log(event.target.parentNode.className);
-		switch(event.target.className){
-			case "imageDiv":
-			event.stopPropagation();
-			singleImage(event.target)
-			break;
-			case "likesDiv":
-				xhttp.request('POST', mainUrl + '/like/' + event.target.parentNode.parentNode.id, function(likeData){
-					var likeData = JSON.parse(likeData);
-					if (likeData.error) return alert(likeData.error);
-					return event.target.getElementsByTagName('p')[0].textContent = likeData.likes;
-				});
-				break;
+			//window.location.hash.length ?? could use this to determine image to link..
 
-			case "sharesDiv":
-			xhttp.request('POST', mainUrl + '/share/' + event.target.parentNode.parentNode.id, function(shareData){
-				var shareData = JSON.parse(shareData);
-				if (shareData.error) return alert(shareData.error);
-				if (event.target.parentNode.parentNode.className === "bigProfileDiv") document.body.click();
-				get('/indexImages', shareData.newId);
-				});
-				break;
-
-			case "username":
-			if (event.target.parentNode.className === "bigProfileDiv") document.body.click();
-			usernameAppend(event.target.textContent);
-			break;
+			return this.fetchData();
 		}
+	}, {
+		key: "fetchData",
+		value: function fetchData() {
+			var _this7 = this;
 
-	}, false)
+			//I realize reusing this for the likes and shares is not ideal, but I will have to reformat the back-end another time.
 
-	function fadeOut(offset, target){
-		target.style.opacity = 1;
-		function opacity(t) {
-			if (t.style.opacity > 0) {
-				setTimeout(function() {
-					t.style.opacity -= .025;
-					opacity(t);
-				}, 100);
+			fetch(mainUrl + "/indexImages").then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				if (data.error) alert(data.error);
+				console.log(data);
+				return _this7.setState({ data: data });
+			});
+		}
+	}, {
+		key: "setOwnership",
+		value: function setOwnership(e) {
+			this.setState({ ownership: null });
+		}
+	}, {
+		key: "imageClick",
+		value: function imageClick(e, likeShare, id) {
+			var _this8 = this;
+
+			e.stopPropagation();
+
+			if (!likeShare) {
+				this.setState({ big: id });
+
+				//document click off 
 			} else {
-				t.style.display = "none";
-				if (!indexContainer.style.marginTop) {
-					indexContainer.style.marginTop = "10%";
-				} else {
-					buttonContainer.style.height = "5vh";
-				}
+				fetch(mainUrl + "/" + likeShare + "/" + id).then(function (response) {
+					return response.json();
+				}).then(function (data) {
+
+					if (data.error) return alert(data.error);
+					_this8.fetchData();
+				});
 			}
 		}
-		setTimeout(function() {
-			opacity(target);
-		}, offset);
-	}
+	}, {
+		key: "render",
+		value: function render() {
+			var _this9 = this;
 
-	document.addEventListener('DOMContentLoaded', function (event){
-		fadeOut(1500, document.getElementById('indexTitle'));
-		fadeOut(4500, document.getElementById('Instructions'));
-		if (window.location.hash.length) {
-			var image = window.location.hash.slice(1, window.location.hash.length);
-			return get('/indexImages', image);
+			var ownership = this.state.ownership ? this.state.ownership : "All";
+			var button = this.state.ownership ? React.createElement("button", { onClick: this.setOwnership }) : null;
+			var big = null;
+			var datArray = this.state.data.map(function (v) {
+
+				var c = React.createElement(ImageDiv, { key: v._id, title: v.imageTitle, imageSrc: v.localImagePath, shares: v.shares,
+					likes: v.likes.length || 0, reshared: v.originalUsername || null, createdBy: v.creator,
+					click: _this9.imageClick, id: v._id });
+
+				if (v._id === _this9.state.big) big = React.createElement(Overlay, { image: c, link: mainurl + "/#" + v._id });
+				return c;
+			});
+			return React.createElement(
+				"div",
+				{ className: "indexContainer" },
+				big,
+				React.createElement(
+					"h1",
+					null,
+					" ",
+					ownership,
+					" Images "
+				),
+				button,
+				React.createElement(
+					"div",
+					{ className: "imageContainer" },
+					datArray
+				)
+			);
 		}
-		get('/indexImages');
-	});
+	}]);
 
+	return Main;
+}(React.Component);
 
-})();
+ReactDOM.render(React.createElement(Main, null), document.getElementById("root"));
