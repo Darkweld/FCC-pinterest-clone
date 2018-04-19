@@ -1,0 +1,110 @@
+body {
+    background-color: darkslategray;
+}
+.imageContainer {
+    column-count: 4;
+    column-gap: 1vh;
+}
+.indexContainer {
+	margin: 0 auto;
+}
+/*Image Div*/
+.likes, .shares, .likeShareText, .image, .smallImageTitle, .imageTitle {
+    pointer-events: none;
+    -moz-user-select:none;
+}
+.likeShareText {
+	font-weight: 600px;
+}
+.likeShareImage {
+    height: 5vh;
+    width: 5vh;
+    display: block;
+}
+.image {
+	width: 100%;
+	height: auto;
+}
+.imageDiv {
+    background-color: white;
+    border-radius: 5vh;
+    display: inline-block;
+    margin: 0 0 1vh;
+    width: 100%;
+    overflow: hidden;
+}
+.imageTitle {
+    margin: 1px auto;
+    padding: 5px;
+    text-overflow: ellipsis:
+	white-space: nowrap;
+}
+.imageDivBottom {
+	display: flex;
+	flex-flow: column nowrap;
+}
+.separator {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    background-color: white;
+}
+.likesDiv, .sharesDiv {
+    display: inline-flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    border: .5vh solid black;
+}
+.likesDiv {
+    border-bottom-left-radius: 5vh;
+}
+.sharesDiv {
+    border-bottom-right-radius: 5vh;
+}
+
+/*Big Div / Overlay */
+.dimmer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left:0;
+    top:0;
+    background-color: black;
+    opacity: .5;
+    z-index: 3;
+}
+.bigDivHolder {
+    position: absolute;
+    width: 50%;
+    z-index: 4;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    left: 0;
+    right: 0;
+    top: 15%;
+    margin: 0 auto 0 auto;
+}
+.shareLinksDiv {
+    width: 45%;
+    background-color: white;
+    padding: 1vh;
+    margin-left: 5vh;
+    border-radius: 5vh;
+}
+.profileInput {
+    margin: 1vh auto 1vh auto;
+    font-size: 3vh;
+    width: 90%;
+}
+.profileLink {
+    color: black;
+    font-size: 3vh;
+}
+

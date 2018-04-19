@@ -27,18 +27,21 @@ var LikeShare = function (_React$Component) {
 		value: function render() {
 			var _this2 = this;
 
-			var imageType = this.props.heart ? "likes.png" : "shares.png";
+			var type = this.props.heart ? "likes" : "shares";
+			var imagePath = "/public/images/" + type + ".png";
+			var cName = type + "Div";
 
 			return React.createElement(
 				"div",
-				{ className: "likeShare", onClick: function onClick(e) {
+				{ className: cName, onClick: function onClick(e) {
 						return _this2.props.clickLikeShare(e, _this2.props.clickType, _this2.props.id);
 					} },
 				React.createElement(
 					"p",
 					{ className: "likeShareText" },
 					this.props.text
-				)
+				),
+				React.createElement("img", { src: imagePath, className: "likeShareImage" })
 			);
 		}
 	}]);
