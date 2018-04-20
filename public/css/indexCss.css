@@ -9,9 +9,8 @@ body {
 	margin: 0 auto;
 }
 /*Image Div*/
-.likes, .shares, .likeShareText, .image, .smallImageTitle, .imageTitle {
+.likeShareText, .imageTitle, .likeShareImage {
     pointer-events: none;
-    -moz-user-select:none;
 }
 .likeShareText {
 	font-weight: 600px;
@@ -32,6 +31,7 @@ body {
     margin: 0 0 1vh;
     width: 100%;
     overflow: hidden;
+	border: 2px solid black;
 }
 .imageTitle {
     margin: 1px auto;
@@ -73,9 +73,9 @@ body {
     height: 100%;
     left:0;
     top:0;
-    background-color: black;
-    opacity: .5;
+    background-color: rgba(0,0,0,0.5);
     z-index: 3;
+	overflow: auto;
 }
 .bigDivHolder {
     position: absolute;
@@ -88,20 +88,21 @@ body {
     align-items: flex-start;
     left: 0;
     right: 0;
-    top: 15%;
+    top: 5%;
     margin: 0 auto 0 auto;
 }
 .shareLinksDiv {
     width: 45%;
     background-color: white;
-    padding: 1vh;
-    margin-left: 5vh;
-    border-radius: 5vh;
+    padding: 10px;
+    margin-left: 5%;
+    border-radius: 10%;
+	border: 2px solid black;
+	font-family: Verdana, Geneva, sans-serif;
 }
-.profileInput {
-    margin: 1vh auto 1vh auto;
+.profileText {
+    margin: 0 0 10px 0;
     font-size: 3vh;
-    width: 90%;
 }
 .profileLink {
     color: black;
