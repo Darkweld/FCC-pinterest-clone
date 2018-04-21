@@ -2,14 +2,27 @@ body {
     background-color: darkslategray;
 }
 .imageContainer {
-    column-count: 4;
-    column-gap: 1vh;
+    column-count: 3;
+    column-gap: 1vw;
 }
 .indexContainer {
 	margin: 0 auto;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+}
+.indexButton {
+	margin: 10px auto 10px auto;
+	border: 2px solid black;
+	color: lightblue;
+	background-color: navy;
+	border-radius: 5vh;
+	font-size: calc(2vh + 10px);
+	cursor: pointer;
 }
 /*Image Div*/
-.likeShareText, .imageTitle, .likeShareImage {
+.likeShareText, .likeShareImage {
     pointer-events: none;
 }
 .likeShareText {
@@ -38,6 +51,7 @@ body {
     padding: 5px;
     text-overflow: ellipsis:
 	white-space: nowrap;
+	cursor: pointer;
 }
 .imageDivBottom {
 	display: flex;
@@ -57,7 +71,6 @@ body {
     align-items: center;
     justify-content: center;
     width: 50%;
-    border: .5vh solid black;
 }
 .likesDiv {
     border-bottom-left-radius: 5vh;
@@ -96,7 +109,7 @@ body {
     background-color: white;
     padding: 10px;
     margin-left: 5%;
-    border-radius: 10%;
+    border-radius: 5vh;
 	border: 2px solid black;
 	font-family: Verdana, Geneva, sans-serif;
 }

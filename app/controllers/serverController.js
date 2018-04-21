@@ -469,7 +469,7 @@ function server(passport) {
     	} else {
 
         Images
-            .find({})
+            .find({"original": {"$exists" : false }})
             .populate('creator', 'localUsername')
             .exec(function(err, doc) {
                 if (err) throw err;

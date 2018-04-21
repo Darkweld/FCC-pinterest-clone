@@ -78,6 +78,13 @@ var ImageDiv = function (_React$Component2) {
 						this.props.title
 					),
 					React.createElement(
+						"p",
+						{ className: "imageTitle", onClick: function onClick(e) {
+								_this4.props.userClick(e, _this4.props.createdBy);
+							} },
+						"By:" + this.props.createdBy
+					),
+					React.createElement(
 						"div",
 						{ className: "separator" },
 						React.createElement(LikeShare, { heart: true, text: this.props.likes, clickType: "like", clickLikeShare: this.props.click, id: this.props.id }),
@@ -106,14 +113,14 @@ var Overlay = function (_React$Component3) {
 
 			return React.createElement(
 				"div",
-				{ "class": "dimmer", onClick: this.props.bigClick },
+				{ className: "dimmer", onClick: this.props.bigClick },
 				React.createElement(
 					"div",
 					{ className: "bigDivHolder" },
 					this.props.image,
 					React.createElement(
 						"div",
-						{ "class": "shareLinksDiv" },
+						{ className: "shareLinksDiv" },
 						React.createElement(
 							"p",
 							{ className: "profileText" },
@@ -141,15 +148,15 @@ var Main = function (_React$Component4) {
 
 		var _this6 = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
 
-		_this6.setOwnership = function (e) {
-			return _this6.setState({ ownership: null });
+		_this6.setOwnership = function (e, v) {
+			return _this6.setState({ ownership: v || null });
 		};
 
 		_this6.setBig = function (e) {
 			return _this6.setState({ big: null });
 		};
 
-		_this6.state = { data: [], ownership: null, big: null };
+		_this6.state = { data: [], ownership: null, big: window.location.hash.slice(1) || null };
 
 		_this6.setOwnership = _this6.setOwnership.bind(_this6);
 		_this6.imageClick = _this6.imageClick.bind(_this6);
@@ -161,7 +168,6 @@ var Main = function (_React$Component4) {
 	_createClass(Main, [{
 		key: "componentDidMount",
 		value: function componentDidMount() {
-
 			//window.location.hash.length ?? could use this to determine image to link..
 
 			return this.fetchData();
@@ -207,22 +213,27 @@ var Main = function (_React$Component4) {
 		value: function render() {
 			var _this9 = this;
 
-			var ownership = this.state.ownership ? this.state.ownership : "All";
-			var button = this.state.ownership ? React.createElement("button", { onClick: this.setOwnership }) : null;
+			var ownership = this.state.ownership ? this.state.ownership + "'s" : "All";
+			var button = this.state.ownership ? React.createElement(
+				"button",
+				{ className: "indexButton", onClick: this.setOwnership },
+				"Return to all images"
+			) : null;
 			var big = null;
 			var ownArray = this.state.ownership ? this.state.data.filter(function (v) {
-				return v.creator === _this9.state.ownership;
+				return v.creator.localUsername === _this9.state.ownership;
 			}) : this.state.data;
 
 			var datArray = ownArray.map(function (v) {
 
 				var c = React.createElement(ImageDiv, { key: v._id, title: v.imageTitle, imageSrc: v.localImagePath, shares: v.shares,
-					likes: v.likes.length || 0, reshared: v.originalUsername || null, createdBy: v.creator,
-					click: _this9.imageClick, id: v._id });
+					likes: v.likes.length || 0, createdBy: v.creator.localUsername, click: _this9.imageClick, id: v._id,
+					userClick: _this9.setOwnership });
 
 				if (v._id === _this9.state.big) big = React.createElement(Overlay, { image: c, link: mainUrl + "/#" + v._id, bigClick: _this9.setBig });
 				return c;
 			});
+
 			return React.createElement(
 				"div",
 				{ className: "indexContainer" },
