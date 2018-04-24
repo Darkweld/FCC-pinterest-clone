@@ -198,7 +198,7 @@ var Main = function (_React$Component4) {
 
 				//document click off 
 			} else {
-				fetch(mainUrl + "/" + likeShare + "/" + id).then(function (response) {
+				fetch(mainUrl + "/" + likeShare + "/" + id, { method: "POST" }).then(function (response) {
 					return response.json();
 				}).then(function (data) {
 
