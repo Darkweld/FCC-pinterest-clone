@@ -14,23 +14,37 @@ body {
 }
 .indexButton {
 	margin: 10px auto 10px auto;
-	border: 2px solid black;
+	border: 2px solid lightblue;
 	color: lightblue;
 	background-color: navy;
 	border-radius: 5vh;
 	font-size: calc(2vh + 10px);
 	cursor: pointer;
+    	padding: 5px;
 }
 /*Image Div*/
+.likesDiv:hover .likeShareText {
+    filter: opacity(.5) drop-shadow(0 0 0 red);
+}
+.likesDiv:hover .likeShareImage {
+    filter: opacity(.5) drop-shadow(0 0 0 red);
+}
+.sharesDiv:hover .likeShareText {
+    filter: opacity(.5) drop-shadow(0 0 0 blue);
+}
+.sharesDiv:hover .likeShareImage {
+    filter: opacity(.5) drop-shadow(0 0 0 blue);
+}
 .likeShareText, .likeShareImage {
     pointer-events: none;
 }
 .likeShareText {
-	font-weight: 600px;
+	margin: 0 5px 0 0;
+  font-size: 25px;
 }
 .likeShareImage {
-    height: 5vh;
-    width: 5vh;
+    height: 25px;
+    width: 25px;
     display: block;
 }
 .image {
@@ -47,15 +61,16 @@ body {
 	border: 2px solid black;
 }
 .imageTitle {
-    margin: 1px auto;
-    padding: 5px;
-    text-overflow: ellipsis:
-	white-space: nowrap;
-	cursor: pointer;
+    margin: 5px auto;
+    padding: 0 5px 0 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 .imageDivBottom {
-	display: flex;
-	flex-flow: column nowrap;
+    display: flex;
+    flex-flow: column nowrap;
 }
 .separator {
     display: flex;
@@ -71,12 +86,14 @@ body {
     align-items: center;
     justify-content: center;
     width: 50%;
+    padding: 5px;
+    cursor: pointer;
 }
 .likesDiv {
-    border-bottom-left-radius: 5vh;
+    background-color: lightsteelblue;
 }
 .sharesDiv {
-    border-bottom-right-radius: 5vh;
+    background-color: lightgoldenrodyellow;
 }
 
 /*Big Div / Overlay */
@@ -110,8 +127,8 @@ body {
     padding: 10px;
     margin-left: 5%;
     border-radius: 5vh;
-	border: 2px solid black;
-	font-family: Verdana, Geneva, sans-serif;
+    border: 2px solid black;
+    font-family: Verdana, Geneva, sans-serif;
 }
 .profileText {
     margin: 0 0 10px 0;
@@ -120,5 +137,32 @@ body {
 .profileLink {
     color: black;
     font-size: 3vh;
+}
+/* link container stuff*/
+.link-container {
+    text-align: center;
+    background-color: dimgray;
+    position: fixed;
+    padding: 5px;
+    top:0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    max-height: 10vh;
+}
+
+.link-container a{
+    color: #80b3b3;
+    background-color: black;
+    margin: 0 5px;
+    border: .5vh solid white;
+    text-decoration: none;
+    font-size: 3vh;
+    border-radius: 1vh;
 }
 

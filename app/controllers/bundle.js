@@ -82,7 +82,7 @@ var ImageDiv = function (_React$Component2) {
 						{ className: "imageTitle", onClick: function onClick(e) {
 								_this4.props.userClick(e, _this4.props.createdBy);
 							} },
-						"By:" + this.props.createdBy
+						"By: " + this.props.createdBy
 					),
 					React.createElement(
 						"div",
